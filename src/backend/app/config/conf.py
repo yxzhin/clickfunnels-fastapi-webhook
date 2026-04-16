@@ -15,7 +15,7 @@ class Config(BaseSettings):
     APP_VERSION: str = Field(min_length=1)
 
     CLICKFUNNELS_SUBDOMAIN: str = Field(min_length=1)
-    CLICKFUNNELS_WORKSPACE_ID: int = Field(min_length=1)
+    CLICKFUNNELS_WORKSPACE_ID: int = Field(ge=1)
     CLICKFUNNELS_API_TOKEN: str = Field(min_length=1)
     CLICKFUNNELS_WEBHOOK_SECRET: str = Field(min_length=1)
 
