@@ -1,0 +1,52 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.10.4
+    hooks:
+      - id: uv-lock
+        name: uv lock
+
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --config pyproject.toml --force-exclude --fix --exit-non-zero-on-fix
+        language: system
+        types: [python]
+        exclude: |
+          (?x)^(
+            src/backend/alembic/.*
+            | src/frontend/.*
+          )$
+
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format --config pyproject.toml --force-exclude --exit-non-zero-on-format
+        language: system
+        types: [python]
+        exclude: |
+          (?x)^(
+            src/backend/alembic/.*
+            | src/frontend/.*
+          )$
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy --config-file pyproject.toml
+        language: system
+        types: [python]
+        exclude: |
+          (?x)^(
+            src/backend/alembic/.*
+            | src/frontend/.*
+          )$
