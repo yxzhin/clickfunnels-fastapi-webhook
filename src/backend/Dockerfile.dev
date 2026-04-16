@@ -1,0 +1,23 @@
+FROM python:3.13-slim
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+WORKDIR /app
+
+ENV \
+  PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1 \
+  UV_LINK_MODE=copy
+
+COPY pyproject.toml uv.lock alembic.ini ./
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked
+
+EXPOSE 8000
+
+COPY ./src/backend/entrypoint.dev.sh ./
+
+RUN chmod +x ./entrypoint.dev.sh
+
+CMD ["./entrypoint.dev.sh"]
