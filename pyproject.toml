@@ -5,7 +5,6 @@ description = "a simple service to use w/ CF workflows that updates custom attri
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "dishka>=1.8.0",
     "fastapi[standard-no-fastapi-cloud-cli]>=0.133.1",
     "loguru>=0.7.3",
     "redis>=7.2.1",

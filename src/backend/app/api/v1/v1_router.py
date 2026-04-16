@@ -1,21 +1,22 @@
 from hashlib import sha256
 from json import JSONDecodeError, loads
 
-from dishka.integrations.fastapi import DishkaRoute, FromDishka
 from fastapi import APIRouter, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 from httpx import AsyncClient
 
-from ...config import Config
+from ...config import get_config
 from ...utils import Helpers, RedisClient, StructuredLogger
 
-v1_router = APIRouter(prefix="/v1", route_class=DishkaRoute)
+v1_router = APIRouter(prefix="/v1")
+
+
+config = get_config()
 
 
 @v1_router.post("/webhooks/clickfunnels")
 async def clickfunnels_webhook(
     request: Request,
-    config: FromDishka[Config],
     x_webhook_clickfunnels_signature: str | None = Header(
         default=None,
         alias="X-Webhook-ClickFunnels-Signature",
