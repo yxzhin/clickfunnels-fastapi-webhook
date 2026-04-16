@@ -1,0 +1,34 @@
+services:
+  backend:
+    container_name: cfw_dev_backend
+    restart: always
+    build:
+      context: .
+      dockerfile: ./src/backend/Dockerfile.dev
+    volumes:
+      - ./src/backend:/app/src/backend
+      - ./.sqlite_data:/app/.sqlite_data
+      - uv-venv:/app/.venv
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+
+  redis:
+    image: redis:latest
+    container_name: cfw_dev_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: >
+      redis-server
+      --appendonly yes
+      --save 60 1000
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+
+volumes:
+  uv-venv:
+  redis_data:
