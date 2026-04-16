@@ -27,6 +27,10 @@ class Config(BaseSettings):
     ENABLE_API_DOCS: bool = True
     LOG_RAW_PAYLOAD: bool = False  # log incoming payloads (avoid in prod unless needed)
 
+    @property
+    def api_base_url(self) -> str:
+        return f"https://{self.CLICKFUNNELS_SUBDOMAIN}.myclickfunnels.com/api/v2"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
