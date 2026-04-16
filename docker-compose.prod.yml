@@ -43,7 +43,7 @@ services:
       - internal
 
   caddy:
-    image: caddy:2-alpine
+    image: caddy:latest
     container_name: cfw_prod_caddy
     restart: always
     ports:
