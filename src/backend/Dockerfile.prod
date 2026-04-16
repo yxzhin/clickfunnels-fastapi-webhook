@@ -1,0 +1,36 @@
+FROM python:3.13-slim AS builder
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+WORKDIR /app
+
+ENV \
+  PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1 \
+  UV_LINK_MODE=copy \
+  UV_NO_DEV=1 \
+  UV_COMPILE_BYTECODE=1
+
+COPY pyproject.toml uv.lock alembic.ini ./
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --group prod --locked --no-install-project
+
+COPY src/backend ./src/backend
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --group prod --locked --compile-bytecode
+
+FROM python:3.13-slim
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+
+EXPOSE 8000
+
+COPY ./src/backend/entrypoint.prod.sh ./
+
+RUN chmod +x ./entrypoint.prod.sh
+
+CMD ["./entrypoint.prod.sh"]
