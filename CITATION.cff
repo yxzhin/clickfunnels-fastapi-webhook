@@ -1,0 +1,25 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: clickfunnels-fastapi-webhook
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: yxzhin
+    email: yxzhin@gmail.com
+    affiliation: cirhalfstudio
+repository-code: 'https://github.com/yxzhin/clickfunnels-fastapi-webhook'
+url: 'https://cf.ybcourses.online/free-webinar'
+abstract: >-
+  a simple service to use w/ CF workflows that updates
+  custom attributes of a CF contact. made by yxzhin with <3
+keywords:
+  - clickfunnels
+  - fastapi
+  - webhook
+license: GPL-3.0
+version: v0.1.0
+date-released: '2026-04-16'
