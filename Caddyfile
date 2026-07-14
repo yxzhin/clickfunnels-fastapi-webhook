@@ -1,4 +1,4 @@
-yourdomain.com {
+{$DOMAIN:localhost} {
     reverse_proxy backend:8000
 
     encode gzip
