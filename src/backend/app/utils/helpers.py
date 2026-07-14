@@ -2,21 +2,21 @@ from datetime import datetime
 from hashlib import sha256
 from hmac import compare_digest, new
 from string import whitespace
-from typing import ClassVar
+from typing import ClassVar, Self
 from zoneinfo import ZoneInfo
 
 from httpx import AsyncClient
 
 
 class Helpers:
-    """utility class w/ general helper functions so I don't repeat yourself"""
+    """utility class w/ general helper functions so I don't repeat myself"""
 
     _clear_whitespace_trans_table: ClassVar[dict[int, int | None]] = str.maketrans(
         "", "", whitespace
     )
 
     @classmethod
-    def clear_whitespace(cls, value: str) -> str:
+    def clear_whitespace(cls: type[Self], value: str) -> str:
         return value.translate(cls._clear_whitespace_trans_table)
 
     @staticmethod
@@ -65,8 +65,8 @@ class Helpers:
         expected = new(secret.encode("utf-8"), signature_payload, sha256).hexdigest()
         return compare_digest(expected, signature)
 
-    @staticmethod
-    def extract_email(payload: dict) -> str | None:
+    @classmethod
+    def extract_email(cls: type[Self], payload: dict) -> str | None:
         """get the email of a contact"""
         data = payload.get("data") or payload.get("contact") or {}
         candidates = [
@@ -88,7 +88,7 @@ class Helpers:
 
         for value in candidates:
             if isinstance(value, str) and value.strip():
-                return value.strip().lower()
+                return cls.trim(value).lower()
 
         # last resort: search common nested structures for an email-like field
         for key in ("fields", "form_fields", "answers"):
@@ -100,7 +100,7 @@ class Helpers:
                     for nested_key in ("email", "value", "answer"):
                         val = item.get(nested_key)
                         if isinstance(val, str) and "@" in val:
-                            return val.strip().lower()
+                            return cls.trim(val).lower()
         return None
 
     @staticmethod
