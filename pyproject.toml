@@ -5,9 +5,17 @@ description = "a simple service to use w/ CF workflows that updates custom attri
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "dishka>=1.10.1",
     "fastapi[standard-no-fastapi-cloud-cli]>=0.133.1",
+    "httpx>=0.28.1",
     "loguru>=0.7.3",
+    "pydantic>=2.13.1",
+    "pydantic-settings>=2.13.1",
     "redis>=7.2.1",
+    "taskiq>=0.12.4",
+    "taskiq-redis>=1.2.2",
+    "twilio>=9.10.9",
+    "tzdata>=2026.3",
 ]
 [dependency-groups]
 dev = [
