@@ -3,8 +3,7 @@ from typing import Self
 
 from twilio.rest import Client
 
-from ..config import get_config
-from .enums import SmsTemplate
+from ..config import SmsTemplate, get_config
 
 config = get_config()
 

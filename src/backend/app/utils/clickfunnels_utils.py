@@ -2,11 +2,11 @@ from hashlib import sha256
 from hmac import compare_digest, new
 from typing import Any
 
-from ..config import get_config
-from .enums import LandingPage
+from ..config import LandingPage, RegisterType, get_config
 from .helpers import Helpers
-from .models import ClickFunnelsContact
+from .models import ClickFunnelsContact, PageContextDefinition, SmsTemplate
 from .structured_logger import StructuredLogger
+from .workflows import WORKFLOW_AU, WORKFLOW_LA
 
 config = get_config()
 
@@ -74,13 +74,45 @@ class ClickFunnelsUtils:
     def resolve_page(
         payload: dict[str, Any],
         page_hint: str,
-    ) -> LandingPage | None:
+    ) -> PageContextDefinition | None:
         page_name = Helpers.trim(
             page_hint or payload.get("page", {}).get("name")
         ).lower()
 
-        if page_name == "регистрация на сегодня":
-            return LandingPage.REGISTRATION_TODAY
-        if page_name == "регистрация на завтра":
-            return LandingPage.REGISTRATION_TOMORROW
+        if page_name == config.REGISTRATION_TODAY_LA_PAGE_NAME:
+            return PageContextDefinition(
+                page=LandingPage.REGISTRATION_TODAY_LA,
+                register_type=RegisterType.TODAY,
+                welcome_sms_template=SmsTemplate.WELCOME_LA,
+                timezone=Helpers.LA_TZ,
+                workflow_definition=WORKFLOW_LA,
+            )
+
+        if page_name == config.REGISTRATION_TODAY_AU_PAGE_NAME:
+            return PageContextDefinition(
+                page=LandingPage.REGISTRATION_TODAY_AU,
+                register_type=RegisterType.TODAY,
+                welcome_sms_template=SmsTemplate.WELCOME_AU,
+                timezone=Helpers.AU_TZ,
+                workflow_definition=WORKFLOW_AU,
+            )
+
+        if page_name == config.REGISTRATION_TOMORROW_LA_PAGE_NAME:
+            return PageContextDefinition(
+                page=LandingPage.REGISTRATION_TOMORROW_LA,
+                register_type=RegisterType.TOMORROW,
+                welcome_sms_template=SmsTemplate.WELCOME_LA,
+                timezone=Helpers.LA_TZ,
+                workflow_definition=WORKFLOW_LA,
+            )
+
+        if page_name == config.REGISTRATION_TOMORROW_AU_PAGE_NAME:
+            return PageContextDefinition(
+                page=LandingPage.REGISTRATION_TOMORROW_AU,
+                register_type=RegisterType.TOMORROW,
+                welcome_sms_template=SmsTemplate.WELCOME_AU,
+                timezone=Helpers.AU_TZ,
+                workflow_definition=WORKFLOW_AU,
+            )
+
         return None
