@@ -51,19 +51,21 @@ class ClickFunnelsUtils:
     @staticmethod
     def extract_contact(payload: dict[str, Any]) -> ClickFunnelsContact:
         data = payload.get("data") or {}
+        contact = data.get("contact") or {}
+        id_ = data.get("contact_id")
+        email = contact.get("email", {}).get("")
+        phone_number = Helpers.normalize_phone(data.get("phone_number") or "")
+        contact_name = contact.get("name", "").split(" ")
+        first_name, last_name = contact_name[0], contact_name[1]
+        page_name = payload.get("page", {}).get("name")
         custom_attributes = data.get("custom_attributes") or {}
-        page_name = (
-            payload.get("page_name")
-            or data.get("page_name")
-            or payload.get("page", {}).get("name")
-        )
 
         return ClickFunnelsContact(
-            id=data.get("id") or payload.get("subject_id"),
-            email=data.get("email_address") or data.get("email"),
-            phone_number=data.get("phone_number") or data.get("phone"),
-            first_name=data.get("first_name"),
-            last_name=data.get("last_name"),
+            id=id_,
+            email=email,
+            phone_number=phone_number,
+            first_name=first_name,
+            last_name=last_name,
             page_name=page_name,
             custom_attributes=custom_attributes,
         )
@@ -73,13 +75,8 @@ class ClickFunnelsUtils:
         payload: dict[str, Any],
         page_hint: str,
     ) -> LandingPage | None:
-        data = payload.get("data") or {}
         page_name = Helpers.trim(
-            page_hint
-            or payload.get("page_name")
-            or data.get("page_name")
-            or payload.get("page", {}).get("name")
-            or ""
+            page_hint or payload.get("page", {}).get("name")
         ).lower()
 
         if page_name == "регистрация на сегодня":
