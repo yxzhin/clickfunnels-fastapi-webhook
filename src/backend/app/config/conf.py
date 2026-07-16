@@ -31,6 +31,11 @@ class Config(BaseSettings):
     # log incoming payloads (avoid in prod unless needed)
     LOG_RAW_PAYLOAD: bool = Field(default=False)
 
+    REGISTRATION_TODAY_LA_PAGE_NAME: str = Field(min_length=1)
+    REGISTRATION_TODAY_AU_PAGE_NAME: str = Field(min_length=1)
+    REGISTRATION_TOMORROW_LA_PAGE_NAME: str = Field(min_length=1)
+    REGISTRATION_TOMORROW_AU_PAGE_NAME: str = Field(min_length=1)
+
     @property
     def api_base_url(self) -> str:
         return f"https://{self.CLICKFUNNELS_SUBDOMAIN}.myclickfunnels.com/api/v2"
