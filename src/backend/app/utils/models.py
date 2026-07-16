@@ -29,7 +29,7 @@ class ClickFunnelsContact:
 
 @dataclass(slots=True, frozen=True)
 class WorkflowPlan:
-    custom_attributes: dict[str, int]
+    custom_attributes: dict[str | None, int]
     sms_templates: list[tuple[SmsTemplate, datetime]]
 
 
