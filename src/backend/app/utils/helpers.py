@@ -3,6 +3,14 @@ from string import whitespace
 from typing import ClassVar, Self
 from zoneinfo import ZoneInfo
 
+from phonenumbers import (
+    NumberParseException,
+    PhoneNumberFormat,
+    format_number,
+    is_valid_number,
+    parse,
+)
+
 
 class Helpers:
     """utility class w/ general helper functions so I don't repeat myself"""
@@ -45,3 +53,18 @@ class Helpers:
     ) -> datetime:
         tomorrow = base + timedelta(days=1)
         return tomorrow.replace(hour=hour, minute=minute, second=0, microsecond=0)
+
+    @staticmethod
+    def normalize_phone(
+        phone: str,
+        default_region: str | None = None,
+    ) -> str:
+        try:
+            parsed = parse(phone, default_region)
+        except NumberParseException as exc:
+            raise ValueError(str(exc)) from exc
+
+        if not is_valid_number(parsed):
+            raise ValueError(f"Invalid phone number: {phone!r}")
+
+        return format_number(parsed, PhoneNumberFormat.E164)
