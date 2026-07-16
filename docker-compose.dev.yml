@@ -1,23 +1,51 @@
+x-app: &app
+  build:
+    context: .
+    dockerfile: ./src/backend/Dockerfile.dev
+  restart: unless-stopped
+  volumes:
+    - ./src/backend:/app
+    - uv-venv:/app/.venv
+  env_file:
+    - .env
+
 services:
   backend:
+    <<: *app
     container_name: cfw_dev_backend
-    restart: always
-    build:
-      context: .
-      dockerfile: ./src/backend/Dockerfile.dev
-    volumes:
-      - ./src/backend:/app/src/backend
-      - ./.sqlite_data:/app/.sqlite_data
-      - uv-venv:/app/.venv
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+
+  worker:
+    <<: *app
+    container_name: cfw_dev_worker
+    command:
+      - uv
+      - run
+      - taskiq
+      - worker
+      - app.utils.tasks:broker
+      - app.utils.tasks
+      - --log-level
+      - INFO
+
+  scheduler:
+    <<: *app
+    container_name: cfw_dev_scheduler
+    command:
+      - uv
+      - run
+      - taskiq
+      - scheduler
+      - app.utils.tasks:scheduler
+      - --skip-first-run
+      - --log-level
+      - INFO
 
   redis:
-    image: redis:latest
+    image: redis:alpine
     container_name: cfw_dev_redis
-    restart: always
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
