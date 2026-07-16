@@ -12,9 +12,9 @@ app = FastAPI(
     title=config.APP_NAME,
     description=config.APP_DESCRIPTION,
     version=config.APP_VERSION,
-    docs_url="/docs" if config.ENABLE_API_DOCS else None,
-    redoc_url="/redoc" if config.ENABLE_API_DOCS else None,
-    openapi_url="/openapi.json" if config.ENABLE_API_DOCS else None,
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
 )
 
 app.add_middleware(
@@ -32,6 +32,6 @@ app.include_router(api_router)
 setup_error_handling(app=app)
 
 
-@app.get("/")
+@app.get("/health")
 async def healthcheck():
     return {"ok": True, "message": "it works!! :tada:"}
