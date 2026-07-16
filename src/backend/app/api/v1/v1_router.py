@@ -1,21 +1,41 @@
-from hashlib import sha256
-from json import JSONDecodeError, loads
+from typing import Any
 
-from fastapi import APIRouter, Header, HTTPException, Request
-from fastapi.responses import JSONResponse
-from httpx import AsyncClient
+from fastapi import APIRouter, Header, HTTPException, Request, status
 
 from ...config import get_config
-from ...utils import Helpers, RedisClient, StructuredLogger
+from ...utils import ClickFunnelsUtils, LandingPage, process_clickfunnels_webhook
 
-v1_router = APIRouter(prefix="/v1")
-
+v1_router = APIRouter(prefix="/v1/webhooks/clickfunnels")
 
 config = get_config()
 
 
-@v1_router.post("/webhooks/clickfunnels")
-async def clickfunnels_webhook(
+async def _handle_webhook(
+    request: Request,
+    page: LandingPage,
+    x_webhook_clickfunnels_signature: str | None,
+    x_webhook_clickfunnels_timestamp: str | None,
+) -> dict[str, bool]:
+    raw_body = await request.body()
+
+    if not ClickFunnelsUtils.verify_clickfunnels_signature(
+        raw_body=raw_body,
+        signature_header=x_webhook_clickfunnels_signature,
+        timestamp_header=x_webhook_clickfunnels_timestamp,
+        secret=config.CLICKFUNNELS_WEBHOOK_SECRET,
+    ):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+    payload: dict[str, Any] = await request.json()
+    await process_clickfunnels_webhook.kiq(payload=payload, page_hint=page.label)  # type: ignore
+    return {"ok": True}
+
+
+@v1_router.post(
+    "/la/registration-today",
+    status_code=status.HTTP_200_OK,
+)
+async def registration_today_webhook(
     request: Request,
     x_webhook_clickfunnels_signature: str | None = Header(
         default=None,
@@ -25,72 +45,33 @@ async def clickfunnels_webhook(
         default=None,
         alias="X-Webhook-ClickFunnels-Timestamp",
     ),
-):
-    raw_body = await request.body()
-
-    if not Helpers.verify_signature(
-        raw_body,
+) -> dict[str, bool]:
+    return await _handle_webhook(
+        request,
+        LandingPage.REGISTRATION_TODAY,
         x_webhook_clickfunnels_signature,
         x_webhook_clickfunnels_timestamp,
-        config.CLICKFUNNELS_WEBHOOK_SECRET,
-    ):
-        raise HTTPException(status_code=401, detail="invalid clickfunnels signature")
-
-    try:
-        payload = loads(raw_body)
-    except JSONDecodeError as e:
-        raise HTTPException(status_code=400, detail="invalid json payload") from e
-
-    if config.LOG_RAW_PAYLOAD:
-        StructuredLogger.info("incoming.payload", payload=payload)
-
-    event_id = (
-        str(
-            payload.get("event_id")
-            or payload.get("id")
-            or payload.get("data", {}).get("id")
-        )
-        or sha256(raw_body).hexdigest()
     )
 
-    acquired = await RedisClient.set(
-        f"cf:event:{event_id}",
-        "1",
-        ex=config.EVENT_TTL_SECONDS,
-        nx=True,
+
+@v1_router.post(
+    "/la/registration-tomorrow",
+    status_code=status.HTTP_200_OK,
+)
+async def registration_tomorrow_webhook(
+    request: Request,
+    x_webhook_clickfunnels_signature: str | None = Header(
+        default=None,
+        alias="X-Webhook-ClickFunnels-Signature",
+    ),
+    x_webhook_clickfunnels_timestamp: str | None = Header(
+        default=None,
+        alias="X-Webhook-ClickFunnels-Timestamp",
+    ),
+) -> dict[str, bool]:
+    return await _handle_webhook(
+        request,
+        LandingPage.REGISTRATION_TOMORROW,
+        x_webhook_clickfunnels_signature,
+        x_webhook_clickfunnels_timestamp,
     )
-    if not acquired:
-        return JSONResponse({"ok": True, "duplicate": True, "event_id": event_id})
-
-    email = Helpers.extract_email(payload)
-    if not email:
-        raise HTTPException(
-            status_code=400, detail="could not find contact email in webhook payload"
-        )
-
-    hhmm = Helpers.current_hhmm(config.TIME_ZONE)
-    flags = Helpers.compute_flags(hhmm)
-
-    async with AsyncClient(timeout=20) as client:
-        result = await Helpers.upsert_contact(
-            client=client,
-            api_base_url=config.api_base_url,
-            workspace_id=config.CLICKFUNNELS_WORKSPACE_ID,
-            token=config.CLICKFUNNELS_API_TOKEN,
-            email=email,
-            custom_attributes=flags,
-        )
-
-    await RedisClient.set_json(
-        f"cf:event:{event_id}",
-        {"email": email, "hhmm": hhmm, "flags": flags, "result": result},
-        ex=config.EVENT_TTL_SECONDS,
-    )
-
-    return {
-        "ok": True,
-        "event_id": event_id,
-        "email": email,
-        "hhmm": hhmm,
-        "flags": flags,
-    }
