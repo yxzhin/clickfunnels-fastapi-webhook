@@ -1,4 +1,5 @@
 **/*.git
+**/*.github
 **/*.gitignore
 **/*.gitattributes
 **/*.editorconfig
@@ -6,6 +7,7 @@
 **/*.prettierrc.json
 **/Caddyfile.example
 **/CITATION.cff
+**/Dockerfile*
 **/docker-compose.*
 **/LICENSE
 **/*.code-workspace
