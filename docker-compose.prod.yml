@@ -1,32 +1,67 @@
+x-app: &app
+  build:
+    context: .
+    dockerfile: ./src/backend/Dockerfile.prod
+  restart: unless-stopped
+  env_file:
+    - .env
+  networks:
+    - internal
+
 services:
   backend:
+    <<: *app
     container_name: cfw_prod_backend
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: ./src/backend/Dockerfile.prod
     ports:
-      - "8000:8000"
-    env_file:
-      - .env
+      - "127.0.0.1:8000:8000"
     depends_on:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          import urllib.request
+          urllib.request.urlopen("http://127.0.0.1:8000/health")
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
-    networks:
-      - internal
+
+  worker:
+    <<: *app
+    container_name: cfw_prod_worker
+    command:
+      - taskiq
+      - worker
+      - app.utils.tasks:broker
+      - app.utils.tasks
+      - --log-level
+      - INFO
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  scheduler:
+    <<: *app
+    container_name: cfw_prod_scheduler
+    command:
+      - taskiq
+      - scheduler
+      - app.utils.tasks:scheduler
+      - --skip-first-run
+      - --log-level
+      - INFO
+    depends_on:
+      backend:
+        condition: service_healthy
 
   redis:
     image: redis:latest
     container_name: cfw_prod_redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     command: >
@@ -46,14 +81,15 @@ services:
   caddy:
     image: caddy:latest
     container_name: cfw_prod_caddy
-    restart: always
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
-    env_file:
-      - .env
+    environment:
+      DOMAIN: ${CADDY_DOMAIN}
+      EMAIL: ${CADDY_EMAIL}
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

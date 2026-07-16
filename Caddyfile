@@ -1,10 +1,12 @@
-{$DOMAIN:localhost} {
-    reverse_proxy backend:8000
+{$DOMAIN} {
+  reverse_proxy backend:8000
 
-    encode gzip
+  encode zstd gzip
 
-    log {
-        output stdout
-        format console
-    }
+  log {
+      output stdout
+      format console
+  }
+
+  tls {$EMAIL}
 }

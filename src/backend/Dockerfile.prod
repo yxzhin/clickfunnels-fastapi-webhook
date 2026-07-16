@@ -11,25 +11,28 @@ ENV \
   UV_NO_DEV=1 \
   UV_COMPILE_BYTECODE=1
 
-COPY pyproject.toml uv.lock Caddyfile ./
+COPY pyproject.toml uv.lock ./
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --group prod --locked --no-install-project
+    uv sync --group prod --locked --no-dev --no-install-project
 
-COPY src/backend ./src/backend
+COPY src/backend ./
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --group prod --locked --compile-bytecode
+    uv sync --group prod --locked --no-dev --compile-bytecode
 
 FROM python:3.13-slim
 
 WORKDIR /app
 
+ENV \
+  PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1 \
+  PATH="/app/.venv/bin:$PATH"
+
 COPY --from=builder /app /app
 
 EXPOSE 8000
-
-COPY ./src/backend/entrypoint.prod.sh ./
 
 RUN chmod +x ./entrypoint.prod.sh
 
