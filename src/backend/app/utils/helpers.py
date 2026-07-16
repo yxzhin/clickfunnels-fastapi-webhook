@@ -19,6 +19,7 @@ class Helpers:
         "", "", whitespace
     )
     LA_TZ: ClassVar[ZoneInfo] = ZoneInfo("America/Los_Angeles")
+    AU_TZ: ClassVar[ZoneInfo] = ZoneInfo("Australia/Sydney")
 
     @classmethod
     def clear_whitespace(cls: type[Self], value: str) -> str:
