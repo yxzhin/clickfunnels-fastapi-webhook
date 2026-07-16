@@ -1,3 +1,3 @@
 # clickfunnels-fastapi-webhook
 
-a simple service to use w/ CF workflows that updates custom attributes of a CF contact. made by yxzhin with &lt;3
+a service I made to replace my Zapier workflows. the webhooks are triggered by ClickFunnels API. made by yxzhin with &lt;3

@@ -14,12 +14,13 @@ authors:
 repository-code: 'https://github.com/yxzhin/clickfunnels-fastapi-webhook'
 url: 'https://cf.ybcourses.online/free-webinar'
 abstract: >-
-  a simple service to use w/ CF workflows that updates
-  custom attributes of a CF contact. made by yxzhin with <3
+  a service I made to replace my Zapier workflows. the
+  webhooks are triggered by ClickFunnels API. made by yxzhin
+  with <3
 keywords:
   - clickfunnels
   - fastapi
   - webhook
 license: GPL-3.0
 version: v0.1.0
-date-released: '2026-07-16'
+date-released: '2026-07-17'
