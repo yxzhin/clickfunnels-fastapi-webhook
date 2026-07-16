@@ -1,18 +1,18 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from dishka.integrations.taskiq import FromDishka, inject
 from httpx import AsyncClient
 from taskiq import TaskiqScheduler
 from taskiq_redis import ListQueueBroker, ListRedisScheduleSource
 
-from ..config import get_config
+from ..config import RegisterType, SmsTemplate, get_config
 from .clickfunnels_client import ClickFunnelsClient
 from .clickfunnels_utils import ClickFunnelsUtils
-from .enums import SmsTemplate
 from .helpers import Helpers
 from .structured_logger import StructuredLogger
 from .twilio_client import TwilioClient
-from .workflow import WorkflowPlan
+from .workflows import WorkflowBuilder
 
 config = get_config()
 broker = ListQueueBroker(url=config.REDIS_URL)
@@ -34,11 +34,12 @@ async def ensure_schedule_source_ready() -> None:
 async def process_clickfunnels_webhook(
     payload: dict,
     page_hint: str,
+    now: datetime,
     httpx_client: FromDishka[AsyncClient],
 ) -> None:
     contact = ClickFunnelsUtils.extract_contact(payload)
-    page = ClickFunnelsUtils.resolve_page(payload, page_hint)
-    if page is None:
+    page_context = ClickFunnelsUtils.resolve_page(payload, page_hint)
+    if page_context is None:
         StructuredLogger.warning(
             "clickfunnels.process_webhook.unsupported_page", page_hint=page_hint
         )
@@ -49,36 +50,31 @@ async def process_clickfunnels_webhook(
 
     if contact.has_phone:
         await twilio.send_sms(
-            to_phone=contact.phone_number or "", template=SmsTemplate.WELCOME
+            to_phone=contact.phone_number or "",
+            template=page_context.welcome_sms_template,
         )
     else:
         StructuredLogger.warning("clickfunnels.process_webhook.missing_phone_number")
 
-    now = Helpers.now_la()
-
-    if page == page.REGISTRATION_TODAY:
-        plan = WorkflowPlan.build_today(now)
-
+    if page_context.register_type == RegisterType.TODAY:
+        plan = WorkflowBuilder.build_today(page_context.workflow_definition, now)
         await cf.upsert_contact(
             contact_id=contact.id,
             body={
                 "custom_attributes": plan.custom_attributes,
-                "email_address": contact.email,
-                "phone_number": contact.phone_number,
-                "first_name": contact.first_name,
-                "last_name": contact.last_name,
+                # "email_address": contact.email,
+                # "phone_number": contact.phone_number,
+                # "first_name": contact.first_name,
+                # "last_name": contact.last_name,
             },
         )
-        await schedule_sms_templates(contact.phone_number, plan.sms_templates)
 
-    elif page == page.REGISTRATION_TOMORROW:
-        plan = WorkflowPlan.build_tomorrow(now)
-        await schedule_sms_templates(contact.phone_number, plan.sms_templates)
+    elif page_context.register_type == RegisterType.TOMORROW:
+        plan = WorkflowBuilder.build_tomorrow(page_context.workflow_definition, now)
 
-    else:
-        StructuredLogger.warning(
-            "tasks.clickfunnels.process_webhook.unhandled_page", page=page
-        )
+    await schedule_sms_templates(
+        contact.phone_number, plan.sms_templates, page_context.timezone
+    )
 
 
 @broker.task(task_name="clickfunnels.send_sms")
@@ -95,6 +91,7 @@ async def send_sms_task(phone_number: str | None, template_name: str) -> None:
 async def schedule_sms_templates(
     phone_number: str | None,
     items: list[tuple[SmsTemplate, datetime]],
+    timezone: ZoneInfo,
 ) -> None:
     if not phone_number or not Helpers.trim(phone_number):
         StructuredLogger.warning("tasks.schedule_sms_templates.missing_phone_number")
@@ -105,7 +102,7 @@ async def schedule_sms_templates(
     for template, when in items:
         await send_sms_task.schedule_by_time(
             schedule_source,
-            when.astimezone(Helpers.LA_TZ),
+            when.astimezone(timezone),
             phone_number,
             template.value,
         )
