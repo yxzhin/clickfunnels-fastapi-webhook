@@ -6,10 +6,17 @@ from dishka import make_async_container
 from dishka.integrations.taskiq import setup_dishka
 from fastapi import FastAPI
 
-from ..di.providers import AsyncClientProvider
+from ..config import get_config
+from ..di.providers import (
+    AsyncClientProvider,
+    ClickFunnelsClientProvider,
+    TwilioClientProvider,
+)
 from .redis_client import RedisClient
 from .structured_logger import StructuredLogger
 from .tasks import broker
+
+config = get_config()
 
 
 @asynccontextmanager
@@ -22,6 +29,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, Any]:
     try:
         container = make_async_container(
             AsyncClientProvider(),
+            ClickFunnelsClientProvider(),
+            TwilioClientProvider(
+                account_sid=config.TWILIO_ACCOUNT_SID,
+                auth_token=config.TWILIO_AUTH_TOKEN,
+                from_number=config.TWILIO_FROM_NUMBER,
+            ),
         )
         setup_dishka(container=container, broker=broker)
         await RedisClient.init()
