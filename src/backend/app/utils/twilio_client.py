@@ -3,32 +3,37 @@ from typing import Self
 
 from twilio.rest import Client
 
-from ..config import SmsTemplate, get_config
-
-config = get_config()
+from ..config import SmsTemplate
 
 
 class TwilioClient:
-    def __init__(self: Self) -> None:
+    def __init__(
+        self: Self,
+        account_sid: str,
+        account_auth_token: str,
+        from_number: str,
+    ) -> None:
         self._twilio_client = Client(
-            config.TWILIO_ACCOUNT_SID, config.TWILIO_AUTH_TOKEN
+            username=account_sid,
+            password=account_auth_token,
         )
+        self._from_number = from_number
 
     def _send_sync(
         self: Self,
         to_phone: str,
         text: str,
-    ) -> str:
+    ) -> str | None:
         message = self._twilio_client.messages.create(
             to=to_phone,
-            from_=config.TWILIO_FROM_NUMBER,
+            from_=self._from_number,
             body=text,
         )
-        return str(message.sid)
+        return message.sid
 
     async def send_sms(
         self: Self,
         to_phone: str,
         template: SmsTemplate,
-    ) -> str:
+    ) -> str | None:
         return await to_thread(self._send_sync, to_phone, template.text)
