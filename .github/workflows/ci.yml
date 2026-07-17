@@ -51,8 +51,24 @@ jobs:
           restore-keys: |
             uv-${{ runner.os }}-
       - run: uv sync --frozen
-      - run: cp .env.example .env
       - run: uv run pytest
         env:
+          APP_NAME: clickfunnels-fastapi-webhook
+          APP_DESCRIPTION: clickfunnels-fastapi-webhook
+          APP_VERSION: 0.1.0
+          CADDY_DOMAIN: localhost
+          CADDY_EMAIL: user@example.com
+          CLICKFUNNELS_SUBDOMAIN: myworkspace
+          CLICKFUNNELS_WORKSPACE_ID: example
+          CLICKFUNNELS_API_TOKEN: example
+          CLICKFUNNELS_WEBHOOK_SECRET: example
+          TWILIO_ACCOUNT_SID: example
+          TWILIO_AUTH_TOKEN: example
+          TWILIO_FROM_NUMBER: example
           TWILIO_TEST_ACCOUNT_SID: ${{ secrets.TWILIO_TEST_ACCOUNT_SID }}
           TWILIO_TEST_AUTH_TOKEN: ${{ secrets.TWILIO_TEST_AUTH_TOKEN }}
+          REDIS_URL: redis://redis:6379/0
+          REGISTRATION_TODAY_LA_PAGE_NAME: reg-today-la
+          REGISTRATION_TODAY_AU_PAGE_NAME: reg-today-au
+          REGISTRATION_TOMORROW_LA_PAGE_NAME: reg-tomorrow-la
+          REGISTRATION_TOMORROW_AU_PAGE_NAME: reg-tomorrow-au
