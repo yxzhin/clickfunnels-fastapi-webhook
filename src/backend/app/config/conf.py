@@ -26,6 +26,10 @@ class Config(BaseSettings):
     TWILIO_AUTH_TOKEN: str = Field(min_length=1)
     TWILIO_FROM_NUMBER: str = Field(min_length=1)
 
+    TWILIO_TEST_ACCOUNT_SID: str = Field(default="optional")
+    TWILIO_TEST_AUTH_TOKEN: str = Field(default="optional")
+    TWILIO_TEST_PHONE_NUMBER: str = Field(default="+15005550006")
+
     REDIS_URL: str = Field(min_length=1)
 
     # log incoming payloads (avoid in prod unless needed)
