@@ -45,8 +45,6 @@ class Config(BaseSettings):
         return f"https://{self.CLICKFUNNELS_SUBDOMAIN}.myclickfunnels.com/api/v2"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
         extra="ignore",
         str_strip_whitespace=True,
         case_sensitive=False,
