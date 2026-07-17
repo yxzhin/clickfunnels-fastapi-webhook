@@ -1,3 +1,4 @@
+from .clickfunnels_client import ClickFunnelsClient
 from .clickfunnels_utils import ClickFunnelsUtils
 from .error_handler import setup_error_handling
 from .helpers import Helpers
@@ -10,6 +11,7 @@ from .traceid_middleware import TraceIDMiddleware
 from .workflows import WORKFLOW_AU, WORKFLOW_LA, WorkflowBuilder
 
 __all__ = [
+    "ClickFunnelsClient",
     "ClickFunnelsUtils",
     "setup_error_handling",
     "Helpers",
