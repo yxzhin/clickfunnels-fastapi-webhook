@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Header, Request, status
 
 from ...config import LandingPage
-from .v1_router import _handle_webhook
+from .handle_webhook import handle_webhook
 
 la_router = APIRouter(prefix="/la")
 
@@ -21,7 +21,7 @@ async def registration_today_webhook(
         alias="X-Webhook-ClickFunnels-Timestamp",
     ),
 ) -> dict[str, bool]:
-    return await _handle_webhook(
+    return await handle_webhook(
         request,
         LandingPage.REGISTRATION_TODAY_LA,
         x_webhook_clickfunnels_signature,
@@ -44,7 +44,7 @@ async def registration_tomorrow_webhook(
         alias="X-Webhook-ClickFunnels-Timestamp",
     ),
 ) -> dict[str, bool]:
-    return await _handle_webhook(
+    return await handle_webhook(
         request,
         LandingPage.REGISTRATION_TOMORROW_LA,
         x_webhook_clickfunnels_signature,
