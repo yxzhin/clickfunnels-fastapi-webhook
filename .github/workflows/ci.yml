@@ -53,3 +53,6 @@ jobs:
       - run: uv sync --frozen
       - run: cp .env.example .env
       - run: uv run pytest
+        env:
+          TWILIO_TEST_ACCOUNT_SID: ${{ secrets.TWILIO_TEST_ACCOUNT_SID }}
+          TWILIO_TEST_AUTH_TOKEN: ${{ secrets.TWILIO_TEST_AUTH_TOKEN }}
