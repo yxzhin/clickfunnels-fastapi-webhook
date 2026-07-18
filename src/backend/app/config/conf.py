@@ -18,9 +18,6 @@ class Config(BaseSettings):
     APP_DESCRIPTION: str = Field(min_length=1)
     APP_VERSION: str = Field(min_length=1)
 
-    CADDY_DOMAIN: str = Field(min_length=1)
-    CADDY_EMAIL: str = Field(min_length=1)
-
     CLICKFUNNELS_SUBDOMAIN: str = Field(min_length=1)
     CLICKFUNNELS_WORKSPACE_ID: str = Field(min_length=1)
     CLICKFUNNELS_API_TOKEN: str = Field(min_length=1)
