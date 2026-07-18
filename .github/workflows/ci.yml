@@ -9,6 +9,10 @@ on:
     branches:
       - "**"
 
+env:
+  TWILIO_TEST_ACCOUNT_SID: ${{ secrets.TWILIO_TEST_ACCOUNT_SID }}
+  TWILIO_TEST_AUTH_TOKEN: ${{ secrets.TWILIO_TEST_AUTH_TOKEN }}
+
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -53,6 +57,3 @@ jobs:
       - run: cp .env.example .env
       - run: uv sync --frozen
       - run: uv run pytest
-        env:
-          TWILIO_TEST_ACCOUNT_SID: ${{ secrets.TWILIO_TEST_ACCOUNT_SID }}
-          TWILIO_TEST_AUTH_TOKEN: ${{ secrets.TWILIO_TEST_AUTH_TOKEN }}
