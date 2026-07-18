@@ -51,10 +51,11 @@ class ClickFunnelsUtils:
     @staticmethod
     def extract_contact(payload: dict[str, Any]) -> ClickFunnelsContact:
         data = payload.get("data") or {}
-        contact = data.get("contact") or {}
+        contact_data = data.get("data") or {}  # //who the fuck made cf api :sob:
+        contact = contact_data.get("data", {}) or {}
         id_ = data.get("contact_id")
         email = contact.get("email", {}).get("")
-        phone_number = Helpers.normalize_phone(data.get("phone_number") or "")
+        phone_number = Helpers.normalize_phone(contact_data.get("phone_number") or "")
         contact_name = contact.get("name", "").split(" ")
         first_name, last_name = contact_name[0], contact_name[1]
         page_name = payload.get("page", {}).get("name")
