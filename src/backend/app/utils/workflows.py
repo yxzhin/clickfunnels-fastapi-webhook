@@ -9,7 +9,7 @@ class WorkflowBuilder:
         definition: WorkflowDefinition,
         now: datetime,
     ) -> WorkflowPlan:
-        custom_attributes: dict[str | None, int] = {}
+        custom_attributes: dict[str | None, str] = {}
         sms_templates: list[tuple[SmsTemplate, datetime]] = []
 
         for step in definition.today:
@@ -20,7 +20,7 @@ class WorkflowBuilder:
                 microsecond=0,
             )
             enabled = now < send_datetime
-            custom_attributes[step.attribute] = int(enabled)
+            custom_attributes[step.attribute] = str(int(enabled))
             if enabled:
                 sms_templates.append((step.template, send_datetime))
 
@@ -34,7 +34,7 @@ class WorkflowBuilder:
         definition: WorkflowDefinition,
         now: datetime,
     ) -> WorkflowPlan:
-        custom_attributes: dict[str | None, int] = {}
+        custom_attributes: dict[str | None, str] = {}
         sms_templates: list[tuple[SmsTemplate, datetime]] = []
         tomorrow = (now + timedelta(days=1)).replace(
             hour=0, minute=0, second=0, microsecond=0
