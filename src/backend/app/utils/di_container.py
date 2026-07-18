@@ -1,6 +1,6 @@
 from dishka import make_async_container
 from dishka.integrations.taskiq import setup_dishka
-from taskiq import TaskiqScheduler
+from taskiq import TaskiqMiddleware, TaskiqScheduler
 from taskiq_redis import ListQueueBroker, ListRedisScheduleSource
 
 from ..config import get_config
@@ -9,6 +9,7 @@ from .di_providers import (
     ClickFunnelsClientProvider,
     TwilioClientProvider,
 )
+from .structured_logger import StructuredLogger
 
 config = get_config()
 
@@ -22,9 +23,15 @@ async def ensure_schedule_source_ready() -> None:
         _schedule_source_ready = True
 
 
-broker = ListQueueBroker(url=config.REDIS_URL)
+class LoggingMiddleware(TaskiqMiddleware):
+    async def pre_execute(self, message):
+        StructuredLogger.setup()
+
+
+broker = ListQueueBroker(url=config.REDIS_URL).with_middlewares(LoggingMiddleware())
 schedule_source = ListRedisScheduleSource(url=config.REDIS_URL)
 scheduler = TaskiqScheduler(broker=broker, sources=[schedule_source])
+
 
 container = make_async_container(
     AsyncClientProvider(),
@@ -35,6 +42,7 @@ container = make_async_container(
         from_number=config.TWILIO_FROM_NUMBER,
     ),
 )
+
 
 setup_dishka(container=container, broker=broker)
 
