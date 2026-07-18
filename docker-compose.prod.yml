@@ -7,6 +7,7 @@ x-app: &app
     - .env
   networks:
     - internal
+    - proxy
 
 services:
   backend:
@@ -77,31 +78,13 @@ services:
       retries: 20
     networks:
       - internal
+      - proxy
 
-  caddy:
-    image: caddy:latest
-    container_name: cfw_prod_caddy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      DOMAIN: ${CADDY_DOMAIN}
-      EMAIL: ${CADDY_EMAIL}
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      backend:
-        condition: service_healthy
-    networks:
-      - internal
 
 networks:
   internal:
+  proxy:
+    external: true
 
 volumes:
   redis_data:
-  caddy_data:
-  caddy_config:
