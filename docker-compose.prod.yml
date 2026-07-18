@@ -42,7 +42,7 @@ services:
       - --log-level
       - INFO
     depends_on:
-      backend:
+      cfw-backend:
         condition: service_healthy
 
   scheduler:
@@ -56,7 +56,7 @@ services:
       - --log-level
       - INFO
     depends_on:
-      backend:
+      cfw-backend:
         condition: service_healthy
 
   redis:
