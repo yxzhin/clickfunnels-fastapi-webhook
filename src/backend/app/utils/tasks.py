@@ -30,14 +30,14 @@ async def process_clickfunnels_webhook(
 
     if page_context.register_type == RegisterType.TODAY:
         plan = WorkflowBuilder.build_today(page_context.workflow_definition, now)
-        await clickfunnels_client.upsert_contact(
+        await clickfunnels_client.update_or_create_contact(
             contact_id=contact.id,
             body={
                 "custom_attributes": plan.custom_attributes,
-                # "email_address": contact.email,
-                # "phone_number": contact.phone_number,
-                # "first_name": contact.first_name,
-                # "last_name": contact.last_name,
+                "email_address": contact.email,
+                "phone_number": contact.phone_number,
+                "first_name": contact.first_name,
+                "last_name": contact.last_name,
             },
         )
 

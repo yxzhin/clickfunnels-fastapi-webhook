@@ -7,12 +7,12 @@ class ClickFunnelsClient:
     def __init__(self: Self, httpx_client: AsyncClient) -> None:
         self._httpx_client = httpx_client
 
-    async def upsert_contact(
+    async def update_or_create_contact(
         self: Self,
         contact_id: str | int | None,
         body: dict[str, Any],
     ) -> None:
-        """update contact details w/ given custom attributes"""
+        """update or create contact w/ given details"""
         if contact_id:
             url = f"/contacts/{contact_id}"
             response = await self._httpx_client.put(url, json=body)
