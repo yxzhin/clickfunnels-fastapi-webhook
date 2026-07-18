@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import HTTPException, Request, status
 
-from ...config import LandingPage, get_config
+from ...config import get_config
 from ...utils import (
     ClickFunnelsUtils,
     StructuredLogger,
@@ -14,7 +14,6 @@ config = get_config()
 
 async def handle_webhook(
     request: Request,
-    page: LandingPage,
     x_webhook_clickfunnels_signature: str | None,
     x_webhook_clickfunnels_timestamp: str | None,
 ) -> dict[str, bool]:
@@ -32,5 +31,5 @@ async def handle_webhook(
     if config.LOG_RAW_PAYLOAD:
         StructuredLogger.info("request.raw_payload", payload=payload)
 
-    await process_clickfunnels_webhook.kiq(payload=payload, page_hint=page.value)  # type: ignore
+    await process_clickfunnels_webhook.kiq(payload=payload)  # type: ignore
     return {"ok": True}

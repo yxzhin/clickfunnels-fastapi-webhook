@@ -14,7 +14,7 @@ class ClickFunnelsContact:
     phone_number: str | None
     first_name: str | None
     last_name: str | None
-    page_name: str | None
+    page_name: str
     custom_attributes: dict[str, Any]
 
     @property

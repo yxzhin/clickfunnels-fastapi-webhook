@@ -16,15 +16,13 @@ from .workflows import WorkflowBuilder
 @inject(patch_module=True)
 async def process_clickfunnels_webhook(
     payload: dict,
-    page_hint: str,
     clickfunnels_client: FromDishka[ClickFunnelsClient],
 ) -> None:
     contact = ClickFunnelsUtils.extract_contact(payload)
-    page_context = ClickFunnelsUtils.resolve_page(payload, page_hint)
+    page_context = ClickFunnelsUtils.resolve_page(contact.page_name)
     if page_context is None:
         StructuredLogger.warning(
             "clickfunnels.process_webhook.unsupported_page",
-            page_hint=page_hint,
         )
         return None
 

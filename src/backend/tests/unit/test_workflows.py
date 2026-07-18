@@ -15,7 +15,6 @@ config = get_config()
 @fixture
 async def page_context_la() -> PageContextDefinition:
     return ClickFunnelsUtils.resolve_page(
-        {},
         config.REGISTRATION_TODAY_LA_PAGE_NAME,
     )  # type: ignore
 
@@ -23,7 +22,6 @@ async def page_context_la() -> PageContextDefinition:
 @fixture
 async def page_context_au() -> PageContextDefinition:
     return ClickFunnelsUtils.resolve_page(
-        {},
         config.REGISTRATION_TODAY_AU_PAGE_NAME,
     )  # type: ignore
 

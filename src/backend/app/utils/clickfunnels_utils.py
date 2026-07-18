@@ -58,7 +58,11 @@ class ClickFunnelsUtils:
         phone_number = Helpers.normalize_phone(contact_data.get("phone_number") or "")
         contact_name = contact.get("name", "").split(" ")
         first_name, last_name = contact_name[0], contact_name[1]
-        page_name = payload.get("page", {}).get("name")
+        page_name = (
+            payload.get("page", {}).get("name")
+            or data.get("page", {}).get("name")
+            or ""
+        )
         custom_attributes = data.get("custom_attributes") or {}
 
         return ClickFunnelsContact(
@@ -72,14 +76,7 @@ class ClickFunnelsUtils:
         )
 
     @staticmethod
-    def resolve_page(
-        payload: dict[str, Any],
-        page_hint: str,
-    ) -> PageContextDefinition | None:
-        page_name = Helpers.trim(
-            page_hint or payload.get("page", {}).get("name")
-        ).lower()
-
+    def resolve_page(page_name: str) -> PageContextDefinition | None:
         if page_name == config.REGISTRATION_TODAY_LA_PAGE_NAME:
             return PageContextDefinition(
                 page=LandingPage.REGISTRATION_TODAY_LA,
