@@ -21,7 +21,7 @@ class AsyncClientProvider(Provider):
             "Accept": "application/json",
             "User-Agent": "clickfunnels-fastapi-webhook/1.0",
         }
-        self._base_url = f"{config.api_base_url}/api/v2/workspaces/{config.CLICKFUNNELS_WORKSPACE_ID}"
+        self._base_url = config.api_base_url
 
     @provide(scope=Scope.APP)
     async def async_client(self: Self) -> AsyncGenerator[AsyncClient, Any]:
