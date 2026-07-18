@@ -10,7 +10,7 @@ x-app: &app
     - proxy
 
 services:
-  backend:
+  cfw-backend:
     <<: *app
     container_name: cfw_prod_backend
     ports:
