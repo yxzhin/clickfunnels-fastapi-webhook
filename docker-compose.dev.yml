@@ -24,8 +24,7 @@ services:
       - run
       - taskiq
       - worker
-      - app.utils.tasks:broker
-      - app.utils.tasks
+      - app.utils.di_container:broker
       - --log-level
       - INFO
 
@@ -37,7 +36,7 @@ services:
       - run
       - taskiq
       - scheduler
-      - app.utils.tasks:scheduler
+      - app.utils.di_container:scheduler
       - --skip-first-run
       - --log-level
       - INFO
