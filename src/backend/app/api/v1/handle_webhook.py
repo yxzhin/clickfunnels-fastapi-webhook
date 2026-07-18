@@ -32,5 +32,5 @@ async def handle_webhook(
     if config.LOG_RAW_PAYLOAD:
         StructuredLogger.info("request.raw_payload", payload=payload)
 
-    await process_clickfunnels_webhook.kiq(payload=payload, page_hint=page.label)  # type: ignore
+    await process_clickfunnels_webhook.kiq(payload=payload, page_hint=page.value)  # type: ignore
     return {"ok": True}
