@@ -2,29 +2,14 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from dishka.integrations.taskiq import FromDishka, inject
-from taskiq import TaskiqScheduler
-from taskiq_redis import ListQueueBroker, ListRedisScheduleSource
 
-from ..config import RegisterType, SmsTemplate, get_config
+from ..config import RegisterType, SmsTemplate
 from .clickfunnels_client import ClickFunnelsClient
 from .clickfunnels_utils import ClickFunnelsUtils
+from .di_container import broker, ensure_schedule_source_ready, schedule_source
 from .structured_logger import StructuredLogger
 from .twilio_client import TwilioClient
 from .workflows import WorkflowBuilder
-
-config = get_config()
-broker = ListQueueBroker(url=config.REDIS_URL)
-schedule_source = ListRedisScheduleSource(url=config.REDIS_URL)
-scheduler = TaskiqScheduler(broker=broker, sources=[schedule_source])
-
-_schedule_source_ready = False
-
-
-async def ensure_schedule_source_ready() -> None:
-    global _schedule_source_ready
-    if not _schedule_source_ready:
-        await schedule_source.startup()
-        _schedule_source_ready = True
 
 
 @broker.task(task_name="clickfunnels.process_webhook")

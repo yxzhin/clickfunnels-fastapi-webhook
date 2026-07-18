@@ -3,7 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from .api import api_router
 from .config import get_config
-from .utils import TraceIDMiddleware, lifespan, setup_error_handling
+from .utils import TraceIDMiddleware, container, lifespan, setup_error_handling
 
 config = get_config()
 
@@ -30,6 +30,8 @@ app.add_middleware(TraceIDMiddleware)
 app.include_router(api_router)
 
 setup_error_handling(app=app)
+
+app.state.dishka_container = container
 
 
 @app.get("/health")

@@ -4,7 +4,9 @@ from typing import Any, Self
 from dishka import Provider, Scope, provide
 from httpx import AsyncClient
 
-from ...config import get_config
+from ..config import get_config
+from .clickfunnels_client import ClickFunnelsClient
+from .twilio_client import TwilioClient
 
 config = get_config()
 
@@ -32,3 +34,33 @@ class AsyncClientProvider(Provider):
                 base_url=self._base_url,
             ) as httpx_client:
                 yield httpx_client
+
+
+class ClickFunnelsClientProvider(Provider):
+    @provide(scope=Scope.APP)
+    async def clickfunnels_client(
+        self: Self,
+        httpx_client: AsyncClient,
+    ) -> ClickFunnelsClient:
+        return ClickFunnelsClient(httpx_client)
+
+
+class TwilioClientProvider(Provider):
+    def __init__(
+        self: Self,
+        account_sid: str,
+        auth_token: str,
+        from_number: str,
+    ) -> None:
+        super().__init__()
+        self._account_sid = account_sid
+        self._auth_token = auth_token
+        self._from_number = from_number
+
+    @provide(scope=Scope.APP)
+    async def twilio_client(self: Self) -> TwilioClient:
+        return TwilioClient(
+            account_sid=self._account_sid,
+            account_auth_token=self._auth_token,
+            from_number=self._from_number,
+        )

@@ -2,21 +2,10 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
 
-from dishka import make_async_container
-from dishka.integrations.taskiq import setup_dishka
 from fastapi import FastAPI
 
-from ..config import get_config
-from ..di.providers import (
-    AsyncClientProvider,
-    ClickFunnelsClientProvider,
-    TwilioClientProvider,
-)
 from .redis_client import RedisClient
 from .structured_logger import StructuredLogger
-from .tasks import broker
-
-config = get_config()
 
 
 @asynccontextmanager
@@ -27,21 +16,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, Any]:
     """
     StructuredLogger.setup()
     try:
-        container = make_async_container(
-            AsyncClientProvider(),
-            ClickFunnelsClientProvider(),
-            TwilioClientProvider(
-                account_sid=config.TWILIO_ACCOUNT_SID,
-                auth_token=config.TWILIO_AUTH_TOKEN,
-                from_number=config.TWILIO_FROM_NUMBER,
-            ),
-        )
-        setup_dishka(container=container, broker=broker)
         await RedisClient.init()
         yield
     except Exception as e:
         StructuredLogger.exception("init.error", error=str(e))
         raise e
     finally:
-        await container.close()
+        await app.state.dishka_container.close()
         await RedisClient.close()
