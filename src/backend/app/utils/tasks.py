@@ -17,7 +17,6 @@ from .workflows import WorkflowBuilder
 async def process_clickfunnels_webhook(
     payload: dict,
     page_hint: str,
-    now: datetime,
     clickfunnels_client: FromDishka[ClickFunnelsClient],
 ) -> None:
     contact = ClickFunnelsUtils.extract_contact(payload)
@@ -28,6 +27,8 @@ async def process_clickfunnels_webhook(
             page_hint=page_hint,
         )
         return None
+
+    now = datetime.now(tz=page_context.timezone)
 
     if page_context.register_type == RegisterType.TODAY:
         plan = WorkflowBuilder.build_today(page_context.workflow_definition, now)
