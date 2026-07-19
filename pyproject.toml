@@ -5,6 +5,7 @@ description = "a service I made to replace my Zapier workflows. the webhooks are
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "alembic>=1.18.5",
     "asyncpg>=0.31.0",
     "dataclasses-json>=0.6.7",
     "dishka>=1.10.1",
@@ -45,8 +46,7 @@ line-length = 88
 indent-width = 4
 target-version = "py313"
 exclude = [
-    "src/frontend",
-    "*/alembic/*"
+    "src/frontend"
 ]
 
 [tool.ruff.format]
@@ -88,8 +88,7 @@ disallow_subclassing_any = false
 explicit_package_bases = true
 check_untyped_defs = true
 exclude = [
-  "^src/frontend/",
-  "^src/backend/alembic/"
+  "^src/frontend/"
 ]
 
 [tool.pytest.ini_options]
