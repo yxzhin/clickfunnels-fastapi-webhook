@@ -9,15 +9,9 @@ class ClickFunnelsClient:
 
     async def update_or_create_contact(
         self: Self,
-        contact_id: str | int | None,
         body: dict[str, Any],
     ) -> None:
         """update or create contact w/ given details"""
-        if contact_id:
-            url = f"/contacts/{contact_id}"
-            response = await self._httpx_client.put(url, json=body)
-        else:
-            url = "/contacts"
-            response = await self._httpx_client.post(url, json=body)
+        response = await self._httpx_client.post("/contacts", json=body)
 
         response.raise_for_status()
