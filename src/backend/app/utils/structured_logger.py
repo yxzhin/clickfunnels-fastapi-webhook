@@ -6,6 +6,7 @@ import sys
 import time
 import uuid
 from collections.abc import ItemsView, KeysView, ValuesView
+from dataclasses import asdict, is_dataclass
 from enum import Enum
 from typing import Any
 
@@ -119,6 +120,9 @@ class StructuredLogger:
                 )
                 for v in value  # type: ignore
             ]
+
+        elif is_dataclass(value):
+            return asdict(value)  # type: ignore
 
         else:
             return value
