@@ -29,10 +29,22 @@ class ClickFunnelsContact:
         return bool(self.phone_number and Helpers.trim(self.phone_number))
 
 
+@dataclass_json
 @dataclass(slots=True, frozen=True)
 class WorkflowPlan:
     custom_attributes: dict[str | None, str]
-    sms_templates: list[tuple[SmsTemplate, datetime]]
+    sms_templates: list[tuple[SmsTemplate, datetime]] = field(
+        metadata=config(
+            encoder=lambda smstmpl: [
+                (
+                    i[0],
+                    i[1].isoformat(),
+                )
+                for i in smstmpl
+            ],
+            decoder=None,
+        )
+    )
 
 
 @dataclass_json
