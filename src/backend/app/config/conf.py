@@ -43,7 +43,7 @@ class Config(BaseSettings):
 
     @property
     def api_base_url(self) -> str:
-        return f"https://{self.CLICKFUNNELS_SUBDOMAIN}.myclickfunnels.com/api/v2"
+        return f"https://{self.CLICKFUNNELS_SUBDOMAIN}.myclickfunnels.com/api/v2/workspaces/{self.CLICKFUNNELS_WORKSPACE_ID}"
 
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -12,6 +12,6 @@ class ClickFunnelsClient:
         body: dict[str, Any],
     ) -> None:
         """update or create contact w/ given details"""
-        response = await self._httpx_client.post("/contacts", json=body)
+        response = await self._httpx_client.post("/contacts/upsert", json=body)
 
         response.raise_for_status()
