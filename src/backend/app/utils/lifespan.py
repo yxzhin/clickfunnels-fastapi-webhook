@@ -14,7 +14,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, Any]:
     Context manager for controlling the lifespan of the FastAPI app.
     Initializes and closes resources at the start and the end of the app.
     """
-    StructuredLogger.setup()
     try:
         await RedisClient.init()
         yield

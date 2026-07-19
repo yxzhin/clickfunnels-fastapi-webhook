@@ -1,6 +1,6 @@
 from dishka import make_async_container
 from dishka.integrations.taskiq import setup_dishka
-from taskiq import TaskiqMiddleware, TaskiqScheduler
+from taskiq import TaskiqScheduler
 from taskiq_redis import ListQueueBroker, ListRedisScheduleSource
 
 from ..config import get_config
@@ -13,6 +13,8 @@ from .structured_logger import StructuredLogger
 
 config = get_config()
 
+StructuredLogger.setup()
+
 _schedule_source_ready = False
 
 
@@ -23,12 +25,7 @@ async def ensure_schedule_source_ready() -> None:
         _schedule_source_ready = True
 
 
-class LoggingMiddleware(TaskiqMiddleware):
-    async def pre_execute(self, message):
-        StructuredLogger.setup()
-
-
-broker = ListQueueBroker(url=config.REDIS_URL).with_middlewares(LoggingMiddleware())
+broker = ListQueueBroker(url=config.REDIS_URL)
 schedule_source = ListRedisScheduleSource(url=config.REDIS_URL)
 scheduler = TaskiqScheduler(broker=broker, sources=[schedule_source])
 
