@@ -19,6 +19,12 @@ async def process_clickfunnels_webhook(
     clickfunnels_client: FromDishka[ClickFunnelsClient],
 ) -> None:
     contact = ClickFunnelsUtils.extract_contact(payload)
+    StructuredLogger.info(
+        "tasks.clickfunnels.process_webhook.contact_extracted",
+        contact=contact,
+        contact_id=contact.id,
+    )
+
     page_context = ClickFunnelsUtils.resolve_page(contact.page_name)
     if page_context is None:
         StructuredLogger.warning(
@@ -47,20 +53,31 @@ async def process_clickfunnels_webhook(
     else:
         StructuredLogger.warning(
             "tasks.clickfunnels.process_webhook.unresolved_register_type",
-            contact_id=contact.id,
             page_context=page_context,
         )
+
+    StructuredLogger.warning(
+        "tasks.clickfunnels.process_webhook.page_context_resolved",
+        page_context=page_context,
+    )
+
+    StructuredLogger.info(
+        "tasks.clickfunnels.process_webhook.plan_built",
+        plan=plan,
+    )
 
     if contact.phone_number is not None:
         await send_sms_task.kiq(
             phone_number=contact.phone_number,
             template=page_context.welcome_sms_template,
         )  # type: ignore
+        StructuredLogger.info("tasks.clickfunnels.process_webhook.welcome_sms_sent")
         await schedule_sms_templates(
             phone_number=contact.phone_number,
             items=plan.sms_templates,
             timezone=page_context.timezone,
         )
+        StructuredLogger.info("tasks.clickfunnels.process_webhook.sms_scheduled")
 
     else:
         StructuredLogger.warning(
@@ -78,6 +95,11 @@ async def send_sms_task(
     twilio_client: FromDishka[TwilioClient],
 ) -> None:
     await twilio_client.send_sms(to_phone=phone_number, template=template)
+    StructuredLogger.info(
+        "tasks.clickfunnels.send_sms.sms_sent",
+        to_phone=phone_number,
+        template=template,
+    )
 
 
 async def schedule_sms_templates(
