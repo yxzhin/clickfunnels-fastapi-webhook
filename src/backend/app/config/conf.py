@@ -18,6 +18,12 @@ class Config(BaseSettings):
     APP_DESCRIPTION: str = Field(min_length=1)
     APP_VERSION: str = Field(min_length=1)
 
+    DB_HOST: str = Field(min_length=1)
+    DB_PORT: str = Field(min_length=1)
+    DB_USER: str = Field(min_length=1)
+    DB_PASS: str = Field(min_length=1)
+    DB_NAME: str = Field(min_length=1)
+
     CLICKFUNNELS_SUBDOMAIN: str = Field(min_length=1)
     CLICKFUNNELS_WORKSPACE_ID: str = Field(min_length=1)
     CLICKFUNNELS_API_TOKEN: str = Field(min_length=1)
@@ -44,6 +50,10 @@ class Config(BaseSettings):
     @property
     def api_base_url(self) -> str:
         return f"https://{self.CLICKFUNNELS_SUBDOMAIN}.myclickfunnels.com/api/v2/workspaces/{self.CLICKFUNNELS_WORKSPACE_ID}"
+
+    @property
+    def database_url(self) -> str:
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     model_config = SettingsConfigDict(
         env_file=".env",
