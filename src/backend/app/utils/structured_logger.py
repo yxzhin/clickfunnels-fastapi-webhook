@@ -122,6 +122,9 @@ class StructuredLogger:
                 for v in value  # type: ignore
             ]
 
+        elif is_dataclass(value) and hasattr(value, "to_json"):
+            return value.to_json()  # type: ignore
+
         elif is_dataclass(value):
             return asdict(value)  # type: ignore
 

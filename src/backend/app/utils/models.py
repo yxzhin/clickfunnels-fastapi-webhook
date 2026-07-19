@@ -1,7 +1,9 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, time
 from typing import Any
 from zoneinfo import ZoneInfo
+
+from dataclasses_json import config, dataclass_json
 
 from ..config import LandingPage, RegisterType, SmsTemplate
 from .helpers import Helpers
@@ -33,11 +35,17 @@ class WorkflowPlan:
     sms_templates: list[tuple[SmsTemplate, datetime]]
 
 
+@dataclass_json
 @dataclass(slots=True, frozen=True)
 class SmsStep:
     attribute: str | None
     template: SmsTemplate
-    send_at: time
+    send_at: time = field(
+        metadata=config(
+            encoder=lambda time: time.isoformat(),
+            decoder=time,
+        )
+    )
 
 
 @dataclass(slots=True, frozen=True)
@@ -46,10 +54,16 @@ class WorkflowDefinition:
     tomorrow: list[SmsStep]
 
 
+@dataclass_json
 @dataclass(slots=True, frozen=True)
 class PageContextDefinition:
     page: LandingPage
     register_type: RegisterType
     welcome_sms_template: SmsTemplate
-    timezone: ZoneInfo
+    timezone: ZoneInfo = field(
+        metadata=config(
+            encoder=lambda tz: tz.key,
+            decoder=ZoneInfo,
+        )
+    )
     workflow_definition: WorkflowDefinition

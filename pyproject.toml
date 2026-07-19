@@ -5,6 +5,7 @@ description = "a service I made to replace my Zapier workflows. the webhooks are
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "dataclasses-json>=0.6.7",
     "dishka>=1.10.1",
     "fastapi[standard-no-fastapi-cloud-cli]>=0.133.1",
     "httpx>=0.28.1",
