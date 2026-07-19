@@ -56,7 +56,7 @@ async def process_clickfunnels_webhook(
             page_context=page_context,
         )
 
-    StructuredLogger.warning(
+    StructuredLogger.info(
         "tasks.clickfunnels.process_webhook.page_context_resolved",
         page_context=page_context,
     )

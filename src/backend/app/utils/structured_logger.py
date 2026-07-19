@@ -9,6 +9,7 @@ from collections.abc import ItemsView, KeysView, ValuesView
 from dataclasses import asdict, is_dataclass
 from enum import Enum
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from loguru import logger
 
@@ -123,6 +124,9 @@ class StructuredLogger:
 
         elif is_dataclass(value):
             return asdict(value)  # type: ignore
+
+        elif isinstance(value, ZoneInfo):
+            return value.key
 
         else:
             return value
