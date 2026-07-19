@@ -5,8 +5,8 @@ from zoneinfo import ZoneInfo
 
 from dataclasses_json import config, dataclass_json
 
-from ..config import LandingPage, RegisterType, SmsTemplate
-from .helpers import Helpers
+from ...config import LandingPage, RegisterType, SmsTemplate
+from ..common import Helpers
 
 
 @dataclass(slots=True)

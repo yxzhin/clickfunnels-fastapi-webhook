@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from src.backend.app.utils import ClickFunnelsUtils
+from src.backend.app.utils.clickfunnels import ClickFunnelsUtils
 
 
 async def test_verify_clickfunnels_signature() -> None:

@@ -4,7 +4,7 @@ import uuid
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from .structured_logger import StructuredLogger, start_time_var, trace_id_var
+from ..common import StructuredLogger, start_time_var, trace_id_var
 
 
 class TraceIDMiddleware(BaseHTTPMiddleware):

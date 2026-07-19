@@ -4,9 +4,9 @@ from typing import Any, Self
 from dishka import Provider, Scope, provide
 from httpx import AsyncClient
 
-from ..config import get_config
-from .clickfunnels_client import ClickFunnelsClient
-from .twilio_client import TwilioClient
+from ...config import get_config
+from ..clickfunnels import ClickFunnelsClient
+from ..twilio import TwilioClient
 
 config = get_config()
 

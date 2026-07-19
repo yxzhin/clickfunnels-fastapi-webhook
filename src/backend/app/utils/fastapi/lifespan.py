@@ -4,8 +4,8 @@ from typing import Any
 
 from fastapi import FastAPI
 
-from .redis_client import RedisClient
-from .structured_logger import StructuredLogger
+from ..common import StructuredLogger
+from ..redis import RedisClient
 
 
 @asynccontextmanager

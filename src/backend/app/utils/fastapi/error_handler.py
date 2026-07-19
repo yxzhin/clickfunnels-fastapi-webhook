@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from .structured_logger import StructuredLogger, trace_id_var
+from ..common import StructuredLogger, trace_id_var
 from .traceid_middleware import TraceIDMiddleware
 
 

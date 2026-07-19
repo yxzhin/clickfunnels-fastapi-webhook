@@ -3,8 +3,8 @@ from datetime import datetime
 from pytest import fixture
 
 from src.backend.app.config import get_config
-from src.backend.app.utils import (
-    ClickFunnelsUtils,
+from src.backend.app.utils.clickfunnels import ClickFunnelsUtils
+from src.backend.app.utils.models import (
     PageContextDefinition,
     WorkflowBuilder,
 )

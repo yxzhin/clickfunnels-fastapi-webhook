@@ -3,11 +3,9 @@ from typing import Any
 from fastapi import APIRouter, Header, HTTPException, Request, status
 
 from ...config import get_config
-from ...utils import (
-    ClickFunnelsUtils,
-    StructuredLogger,
-    process_clickfunnels_webhook,
-)
+from ...utils.clickfunnels import ClickFunnelsUtils
+from ...utils.common import StructuredLogger
+from ...utils.taskiq import process_clickfunnels_webhook
 
 config = get_config()
 

@@ -1,6 +1,6 @@
 from pytest import mark, raises
 
-from src.backend.app.utils.helpers import Helpers
+from src.backend.app.utils.common import Helpers
 
 
 @mark.parametrize(

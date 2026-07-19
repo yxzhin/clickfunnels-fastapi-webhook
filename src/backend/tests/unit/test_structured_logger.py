@@ -4,10 +4,10 @@ from zoneinfo import ZoneInfo
 from pytest import fixture
 
 from src.backend.app.config import LandingPage, RegisterType, SmsTemplate
-from src.backend.app.utils import (
+from src.backend.app.utils.common import StructuredLogger
+from src.backend.app.utils.models import (
     PageContextDefinition,
     SmsStep,
-    StructuredLogger,
     WorkflowBuilder,
     WorkflowDefinition,
 )

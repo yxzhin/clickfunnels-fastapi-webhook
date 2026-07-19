@@ -3,13 +3,12 @@ from zoneinfo import ZoneInfo
 
 from dishka.integrations.taskiq import FromDishka, inject
 
-from ..config import RegisterType, SmsTemplate
-from .clickfunnels_client import ClickFunnelsClient
-from .clickfunnels_utils import ClickFunnelsUtils
-from .di_container import broker, ensure_schedule_source_ready, schedule_source
-from .structured_logger import StructuredLogger
-from .twilio_client import TwilioClient
-from .workflows import WorkflowBuilder
+from ...config import RegisterType, SmsTemplate
+from ..clickfunnels import ClickFunnelsClient, ClickFunnelsUtils
+from ..common import StructuredLogger
+from ..di import broker, ensure_schedule_source_ready, schedule_source
+from ..models import WorkflowBuilder
+from ..twilio import TwilioClient
 
 
 @broker.task(task_name="clickfunnels.process_webhook")

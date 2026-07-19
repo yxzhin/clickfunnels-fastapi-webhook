@@ -2,11 +2,14 @@ from hashlib import sha256
 from hmac import compare_digest, new
 from typing import Any
 
-from ..config import LandingPage, RegisterType, get_config
-from .helpers import Helpers
-from .models import ClickFunnelsContact, PageContextDefinition, SmsTemplate
-from .structured_logger import StructuredLogger
-from .workflows import WORKFLOW_AU, WORKFLOW_LA
+from ...config import LandingPage, RegisterType, SmsTemplate, get_config
+from ..common import Helpers, StructuredLogger
+from ..models import (
+    WORKFLOW_AU,
+    WORKFLOW_LA,
+    ClickFunnelsContact,
+    PageContextDefinition,
+)
 
 config = get_config()
 

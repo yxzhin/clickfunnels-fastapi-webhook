@@ -1,6 +1,7 @@
 from datetime import datetime, time, timedelta
 
-from .models import SmsStep, SmsTemplate, WorkflowDefinition, WorkflowPlan
+from ...config import SmsTemplate
+from ..models import SmsStep, WorkflowDefinition, WorkflowPlan
 
 
 class WorkflowBuilder:

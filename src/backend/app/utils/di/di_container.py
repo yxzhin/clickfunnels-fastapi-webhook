@@ -3,13 +3,13 @@ from dishka.integrations.taskiq import setup_dishka
 from taskiq import TaskiqScheduler
 from taskiq_redis import ListQueueBroker, ListRedisScheduleSource
 
-from ..config import get_config
+from ...config import get_config
+from ..common import StructuredLogger
 from .di_providers import (
     AsyncClientProvider,
     ClickFunnelsClientProvider,
     TwilioClientProvider,
 )
-from .structured_logger import StructuredLogger
 
 config = get_config()
 
@@ -43,4 +43,4 @@ container = make_async_container(
 
 setup_dishka(container=container, broker=broker)
 
-from . import tasks  # noqa
+# from ..taskiq import tasks  # noqa

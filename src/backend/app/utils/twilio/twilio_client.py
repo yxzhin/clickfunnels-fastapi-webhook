@@ -3,7 +3,7 @@ from typing import Self
 
 from twilio.rest import Client
 
-from ..config import SmsTemplate
+from ...config import SmsTemplate
 
 
 class TwilioClient:

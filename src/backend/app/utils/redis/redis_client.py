@@ -5,8 +5,8 @@ from typing import Any
 from redis.asyncio import Redis, lock
 from redis.asyncio.connection import ConnectionPool
 
-from ..config import get_config
-from .structured_logger import StructuredLogger
+from ...config import get_config
+from ..common import StructuredLogger
 
 config = get_config()
 

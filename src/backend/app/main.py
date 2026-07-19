@@ -3,7 +3,8 @@ from starlette.middleware.cors import CORSMiddleware
 
 from .api import api_router
 from .config import get_config
-from .utils import TraceIDMiddleware, container, lifespan, setup_error_handling
+from .utils.di import container
+from .utils.fastapi import TraceIDMiddleware, lifespan, setup_error_handling
 
 config = get_config()
 

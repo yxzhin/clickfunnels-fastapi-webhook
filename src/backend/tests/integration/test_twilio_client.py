@@ -1,7 +1,7 @@
 from pytest import fixture
 
 from src.backend.app.config import SmsTemplate, get_config
-from src.backend.app.utils.twilio_client import TwilioClient
+from src.backend.app.utils.twilio import TwilioClient
 
 config = get_config()
 
