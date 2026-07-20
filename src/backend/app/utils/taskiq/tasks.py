@@ -1,14 +1,18 @@
 from datetime import datetime
+from uuid import UUID
 from zoneinfo import ZoneInfo
 
 from dishka.integrations.taskiq import FromDishka, inject
 
-from ...config import RegisterType, SmsTemplate
+from ...config import RegisterType, SmsTemplate, get_config
 from ..clickfunnels import ClickFunnelsClient, ClickFunnelsUtils
 from ..common import StructuredLogger
 from ..di import broker, ensure_schedule_source_ready, schedule_source
 from ..models import WorkflowBuilder
+from ..services import WebhookEventService
 from ..twilio import TwilioClient
+
+config = get_config()
 
 
 @broker.task(task_name="clickfunnels.process_webhook")
@@ -16,7 +20,33 @@ from ..twilio import TwilioClient
 async def process_clickfunnels_webhook(
     payload: dict,
     clickfunnels_client: FromDishka[ClickFunnelsClient],
+    webhook_event_service: FromDishka[WebhookEventService],
 ) -> None:
+    if config.LOG_RAW_PAYLOAD:
+        StructuredLogger.info("request.raw_payload", payload=payload)
+
+    event_id = payload.get("event_id")
+
+    if event_id is None:
+        StructuredLogger.error("request.event_id.not_found")
+        return None
+
+    try:
+        event_id = UUID(event_id)
+
+    except Exception:
+        StructuredLogger.error("request.event_id.invalid")
+        return None
+
+    created = await webhook_event_service.create_if_not_exists(event_id)
+    if not created:
+        StructuredLogger.warning(
+            "tasks.clickfunnels.process_webhook.event_already_exists"
+        )
+        return None
+
+    StructuredLogger.info("tasks.clickfunnels.process_webhook.event_created")
+
     contact = ClickFunnelsUtils.extract_contact(payload)
     StructuredLogger.info(
         "tasks.clickfunnels.process_webhook.contact_extracted",
@@ -26,8 +56,8 @@ async def process_clickfunnels_webhook(
 
     page_context = ClickFunnelsUtils.resolve_page(contact.page_name)
     if page_context is None:
-        StructuredLogger.warning(
-            "clickfunnels.process_webhook.unsupported_page",
+        StructuredLogger.error(
+            "tasks.clickfunnels.process_webhook.unsupported_page",
         )
         return None
 
@@ -51,7 +81,7 @@ async def process_clickfunnels_webhook(
         plan = WorkflowBuilder.build_tomorrow(page_context.workflow_definition, now)
 
     else:
-        StructuredLogger.warning(
+        StructuredLogger.error(
             "tasks.clickfunnels.process_webhook.unresolved_register_type",
             page_context=page_context,
         )
@@ -86,8 +116,10 @@ async def process_clickfunnels_webhook(
             page_context=page_context,
         )
 
+    StructuredLogger.info("tasks.clickfunnels.process_webhook.processed_successfully")
 
-@broker.task(task_name="clickfunnels.send_sms")
+
+@broker.task(task_name="twilio.send_sms")
 @inject(patch_module=True)
 async def send_sms_task(
     phone_number: str,
@@ -96,7 +128,7 @@ async def send_sms_task(
 ) -> None:
     await twilio_client.send_sms(to_phone=phone_number, template=template)
     StructuredLogger.info(
-        "tasks.clickfunnels.send_sms.sms_sent",
+        "tasks.twilio.send_sms.sms_sent",
         to_phone=phone_number,
         template=template,
     )
