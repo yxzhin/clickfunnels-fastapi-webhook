@@ -39,8 +39,8 @@ services:
     command:
       - taskiq
       - worker
-      - app.utils.di.di_container:broker
-      - app.utils.taskiq.tasks
+      - src.backend.app.utils.di.di_container:broker
+      - src.backend.app.utils.taskiq.tasks
       - --workers
       - "4"
       - --log-level
@@ -55,7 +55,7 @@ services:
     command:
       - taskiq
       - scheduler
-      - app.utils.di.di_container:scheduler
+      - src.backend.app.utils.di.di_container:scheduler
       - --skip-first-run
       - --log-level
       - INFO
