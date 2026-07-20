@@ -8,6 +8,8 @@ from ..common import StructuredLogger
 from .di_providers import (
     AsyncClientProvider,
     ClickFunnelsClientProvider,
+    DBSessionProvider,
+    ServiceProvider,
     TwilioClientProvider,
 )
 
@@ -33,6 +35,8 @@ scheduler = TaskiqScheduler(broker=broker, sources=[schedule_source])
 container = make_async_container(
     AsyncClientProvider(),
     ClickFunnelsClientProvider(),
+    DBSessionProvider(),
+    ServiceProvider(),
     TwilioClientProvider(
         account_sid=config.TWILIO_ACCOUNT_SID,
         auth_token=config.TWILIO_AUTH_TOKEN,
