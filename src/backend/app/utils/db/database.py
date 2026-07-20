@@ -2,7 +2,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
 
-from sqlalchemy import event, text
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -40,13 +40,6 @@ class Database:
                 pool_timeout=10,  # expected time of successful connection createion (in seconds)
                 pool_use_lifo=True,
             )
-
-            @event.listens_for(cls._engine.sync_engine, "connect")
-            def enable_sqlite_fk(dbapi_connection, connection_record):
-                cursor = dbapi_connection.cursor()
-                cursor.execute("PRAGMA foreign_keys=ON")
-                cursor.close()
-
             cls._SessionLocal = async_sessionmaker(
                 bind=cls._engine, class_=AsyncSession, expire_on_commit=False
             )
