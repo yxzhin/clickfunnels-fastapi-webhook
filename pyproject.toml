@@ -46,7 +46,8 @@ line-length = 88
 indent-width = 4
 target-version = "py313"
 exclude = [
-    "src/frontend"
+    "src/frontend",
+    "src/backend/app/alembic/versions"
 ]
 
 [tool.ruff.format]
@@ -88,7 +89,8 @@ disallow_subclassing_any = false
 explicit_package_bases = true
 check_untyped_defs = true
 exclude = [
-  "^src/frontend/"
+  "^src/frontend/",
+  "^src/backend/app/alembic/versions/"
 ]
 
 [tool.pytest.ini_options]
