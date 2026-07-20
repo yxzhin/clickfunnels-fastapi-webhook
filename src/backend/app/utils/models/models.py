@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime, time
-from typing import Any
+from typing import Any, Literal
 from zoneinfo import ZoneInfo
 
 from dataclasses_json import config, dataclass_json
@@ -58,6 +58,7 @@ class SmsStep:
             decoder=time,
         )
     )
+    send_at_type: Literal["replace", "increment"]
 
 
 @dataclass(slots=True, frozen=True)
