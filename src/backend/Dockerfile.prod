@@ -11,12 +11,12 @@ ENV \
   UV_NO_DEV=1 \
   UV_COMPILE_BYTECODE=1
 
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock alembic.ini ./
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --group prod --locked --no-dev --no-install-project
 
-COPY src/backend ./
+COPY ./src/backend ./src/backend
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --group prod --locked --no-dev --compile-bytecode
@@ -34,6 +34,6 @@ COPY --from=builder /app /app
 
 EXPOSE 8000
 
-RUN chmod +x ./entrypoint.prod.sh
+RUN chmod +x ./src/backend/entrypoint.prod.sh
 
-CMD ["./entrypoint.prod.sh"]
+CMD ["./src/backend/entrypoint.prod.sh"]
