@@ -17,10 +17,10 @@ from src.backend.app.utils.models import (
 async def workflow_definition() -> WorkflowDefinition:
     return WorkflowDefinition(
         today=[
-            SmsStep("test1", SmsTemplate.LA_1_HOUR_BEFORE, time(13, 0)),
+            SmsStep("test1", SmsTemplate.LA_1_HOUR_BEFORE, time(13, 0), "replace"),
         ],
         tomorrow=[
-            SmsStep("test2", SmsTemplate.LA_2_HOURS_BEFORE, time(12, 0)),
+            SmsStep("test2", SmsTemplate.LA_2_HOURS_BEFORE, time(12, 0), "replace"),
         ],
     )
 
