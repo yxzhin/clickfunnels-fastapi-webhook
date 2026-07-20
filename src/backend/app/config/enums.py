@@ -22,6 +22,9 @@ class SmsTemplate(StrEnum):
     AU_START = "AU_START"
     AU_MORNING_REMINDER = "AU_MORNING_REMINDER"
 
+    AFTER_REG_5_MINUTES = "AFTER_REG_5_MINUTES"
+    AFTER_REG_1_HOUR = "AFTER_REG_1_HOUR"
+
     @property
     def text(self: Self) -> str:
         return self.value
