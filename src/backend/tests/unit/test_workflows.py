@@ -39,7 +39,7 @@ async def test_workflow_plan_build_today_early_la(
         "send_email2": "1",
         "send_email3": "1",
     }
-    assert len(plan.sms_templates) == 5
+    assert len(plan.sms_templates) == 3
 
 
 async def test_workflow_plan_build_today_mid_la(
@@ -52,7 +52,7 @@ async def test_workflow_plan_build_today_mid_la(
         "send_email2": "1",
         "send_email3": "1",
     }
-    assert len(plan.sms_templates) == 4
+    assert len(plan.sms_templates) == 2
 
 
 async def test_workflow_plan_build_today_late_la(
@@ -65,7 +65,7 @@ async def test_workflow_plan_build_today_late_la(
         "send_email2": "0",
         "send_email3": "1",
     }
-    assert len(plan.sms_templates) == 3
+    assert len(plan.sms_templates) == 1
 
 
 async def test_workflow_plan_build_tomorrow_la(
@@ -74,7 +74,7 @@ async def test_workflow_plan_build_tomorrow_la(
     dt = datetime(2026, 7, 14, 9, 0, tzinfo=page_context_la.timezone)
     plan = WorkflowBuilder.build_tomorrow(page_context_la.workflow_definition, dt)
     assert plan.custom_attributes == {}
-    assert len(plan.sms_templates) == 6
+    assert len(plan.sms_templates) == 4
 
 
 # au
@@ -90,7 +90,7 @@ async def test_workflow_plan_build_today_early_au(
         "send_email2_au": "1",
         "send_email3_au": "1",
     }
-    assert len(plan.sms_templates) == 5
+    assert len(plan.sms_templates) == 3
 
 
 async def test_workflow_plan_build_today_mid_au(
@@ -103,7 +103,7 @@ async def test_workflow_plan_build_today_mid_au(
         "send_email2_au": "1",
         "send_email3_au": "1",
     }
-    assert len(plan.sms_templates) == 4
+    assert len(plan.sms_templates) == 2
 
 
 async def test_workflow_plan_build_today_late_au(
@@ -116,7 +116,7 @@ async def test_workflow_plan_build_today_late_au(
         "send_email2_au": "0",
         "send_email3_au": "1",
     }
-    assert len(plan.sms_templates) == 3
+    assert len(plan.sms_templates) == 1
 
 
 async def test_workflow_plan_build_tomorrow_au(
@@ -125,4 +125,4 @@ async def test_workflow_plan_build_tomorrow_au(
     dt = datetime(2026, 7, 14, 9, 0, tzinfo=page_context_au.timezone)
     plan = WorkflowBuilder.build_tomorrow(page_context_au.workflow_definition, dt)
     assert plan.custom_attributes == {}
-    assert len(plan.sms_templates) == 6
+    assert len(plan.sms_templates) == 4

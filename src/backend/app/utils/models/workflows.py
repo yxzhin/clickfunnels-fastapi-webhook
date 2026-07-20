@@ -78,15 +78,15 @@ class WorkflowBuilder:
 
 WORKFLOW_LA = WorkflowDefinition(
     today=[
-        SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
-        SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
+        # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
+        # SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
         SmsStep("send_email1", SmsTemplate.LA_2_HOURS_BEFORE, time(13, 0), "replace"),
         SmsStep("send_email2", SmsTemplate.LA_1_HOUR_BEFORE, time(14, 0), "replace"),
         SmsStep("send_email3", SmsTemplate.LA_START, time(15, 0), "replace"),
     ],
     tomorrow=[
-        SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
-        SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
+        # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
+        # SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
         SmsStep(None, SmsTemplate.LA_MORNING_REMINDER, time(10, 0), "replace"),
         SmsStep(None, SmsTemplate.LA_2_HOURS_BEFORE, time(13, 0), "replace"),
         SmsStep(None, SmsTemplate.LA_1_HOUR_BEFORE, time(14, 0), "replace"),
@@ -96,8 +96,8 @@ WORKFLOW_LA = WorkflowDefinition(
 
 WORKFLOW_AU = WorkflowDefinition(
     today=[
-        SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
-        SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
+        # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
+        # SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
         SmsStep(
             "send_email1_au", SmsTemplate.AU_2_HOURS_BEFORE, time(17, 0), "replace"
         ),
@@ -105,8 +105,8 @@ WORKFLOW_AU = WorkflowDefinition(
         SmsStep("send_email3_au", SmsTemplate.AU_START, time(19, 0), "replace"),
     ],
     tomorrow=[
-        SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
-        SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
+        # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
+        # SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
         SmsStep(None, SmsTemplate.AU_MORNING_REMINDER, time(10, 0), "replace"),
         SmsStep(None, SmsTemplate.AU_2_HOURS_BEFORE, time(17, 0), "replace"),
         SmsStep(None, SmsTemplate.AU_1_HOUR_BEFORE, time(18, 0), "replace"),
