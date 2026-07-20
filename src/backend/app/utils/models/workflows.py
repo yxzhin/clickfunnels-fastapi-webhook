@@ -80,9 +80,9 @@ WORKFLOW_LA = WorkflowDefinition(
     today=[
         # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
         # SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
-        SmsStep("send_email1", SmsTemplate.LA_2_HOURS_BEFORE, time(13, 0), "replace"),
-        SmsStep("send_email2", SmsTemplate.LA_1_HOUR_BEFORE, time(14, 0), "replace"),
-        SmsStep("send_email3", SmsTemplate.LA_START, time(15, 0), "replace"),
+        SmsStep("send_email15", SmsTemplate.LA_2_HOURS_BEFORE, time(13, 0), "replace"),
+        SmsStep("send_email17", SmsTemplate.LA_1_HOUR_BEFORE, time(14, 0), "replace"),
+        SmsStep("send_email19", SmsTemplate.LA_START, time(15, 0), "replace"),
     ],
     tomorrow=[
         # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
