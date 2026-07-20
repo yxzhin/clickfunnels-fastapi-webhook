@@ -1,4 +1,6 @@
 #!/bin/sh
 set -e
 
-exec gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+alembic upgrade head
+
+exec gunicorn src.backend.app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
