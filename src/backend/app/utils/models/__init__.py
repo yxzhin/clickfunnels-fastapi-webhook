@@ -1,3 +1,4 @@
+from .db_models import WebhookEvent
 from .models import (
     ClickFunnelsContact,
     PageContextDefinition,
@@ -8,6 +9,7 @@ from .models import (
 from .workflows import WORKFLOW_AU, WORKFLOW_LA, WorkflowBuilder
 
 __all__ = [
+    "WebhookEvent",
     "ClickFunnelsContact",
     "PageContextDefinition",
     "SmsStep",
