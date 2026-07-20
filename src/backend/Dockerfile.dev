@@ -9,7 +9,7 @@ ENV \
   PYTHONUNBUFFERED=1 \
   UV_LINK_MODE=copy
 
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock alembic.ini ./
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked
