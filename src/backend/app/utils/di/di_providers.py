@@ -3,9 +3,12 @@ from typing import Any, Self
 
 from dishka import Provider, Scope, provide
 from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...config import get_config
 from ..clickfunnels import ClickFunnelsClient
+from ..db import Database
+from ..services import WebhookEventService
 from ..twilio import TwilioClient
 
 config = get_config()
@@ -64,3 +67,29 @@ class TwilioClientProvider(Provider):
             account_auth_token=self._auth_token,
             from_number=self._from_number,
         )
+
+
+class ServiceProvider(Provider):
+    @provide(scope=Scope.REQUEST)
+    async def webhook_event_service_provider(
+        self: Self,
+        db_sess: AsyncSession,
+    ) -> WebhookEventService:
+        return WebhookEventService(db_sess)
+
+
+class DBSessionProvider(Provider):
+    def __init__(
+        self: Self,
+        db_sess: AsyncSession | None = None,
+    ):
+        super().__init__()
+        self._db_sess = db_sess
+
+    @provide(scope=Scope.REQUEST)
+    async def db_sess(self: Self) -> AsyncGenerator[AsyncSession, Any]:
+        if self._db_sess:
+            yield self._db_sess
+        else:
+            async with Database.get_session() as session:
+                yield session
