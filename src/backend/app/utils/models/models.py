@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime, time
+from datetime import datetime
 from typing import Any, Literal
 from zoneinfo import ZoneInfo
 
@@ -49,15 +49,18 @@ class WorkflowPlan:
 
 @dataclass_json
 @dataclass(slots=True, frozen=True)
+class Time:
+    hours: int = 0
+    minutes: int = 0
+    days: int = 0
+
+
+@dataclass_json
+@dataclass(slots=True, frozen=True)
 class SmsStep:
     attribute: str | None
     template: SmsTemplate
-    send_at: time = field(
-        metadata=config(
-            encoder=lambda time: time.isoformat(),
-            decoder=time,
-        )
-    )
+    send_at: Time
     send_at_type: Literal["replace", "increment"]
 
 

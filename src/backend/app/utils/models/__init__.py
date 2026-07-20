@@ -3,6 +3,7 @@ from .models import (
     ClickFunnelsContact,
     PageContextDefinition,
     SmsStep,
+    Time,
     WorkflowDefinition,
     WorkflowPlan,
 )
@@ -13,6 +14,7 @@ __all__ = [
     "ClickFunnelsContact",
     "PageContextDefinition",
     "SmsStep",
+    "Time",
     "WorkflowDefinition",
     "WorkflowPlan",
     "WORKFLOW_AU",

@@ -1,4 +1,4 @@
-from datetime import UTC, datetime, time
+from datetime import UTC, datetime
 from zoneinfo import ZoneInfo
 
 from pytest import fixture
@@ -8,6 +8,7 @@ from src.backend.app.utils.common import StructuredLogger
 from src.backend.app.utils.models import (
     PageContextDefinition,
     SmsStep,
+    Time,
     WorkflowBuilder,
     WorkflowDefinition,
 )
@@ -17,10 +18,10 @@ from src.backend.app.utils.models import (
 async def workflow_definition() -> WorkflowDefinition:
     return WorkflowDefinition(
         today=[
-            SmsStep("test1", SmsTemplate.LA_1_HOUR_BEFORE, time(13, 0), "replace"),
+            SmsStep("test1", SmsTemplate.LA_1_HOUR_BEFORE, Time(13, 0), "replace"),
         ],
         tomorrow=[
-            SmsStep("test2", SmsTemplate.LA_2_HOURS_BEFORE, time(12, 0), "replace"),
+            SmsStep("test2", SmsTemplate.LA_2_HOURS_BEFORE, Time(12, 0), "replace"),
         ],
     )
 
