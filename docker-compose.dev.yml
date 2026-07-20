@@ -4,19 +4,19 @@ x-app: &app
     dockerfile: ./src/backend/Dockerfile.dev
   restart: unless-stopped
   volumes:
-    - ./src/backend:/app
+    - ./src/backend:/app/src/backend
     - uv-venv:/app/.venv
   env_file:
     - .env
 
 services:
-  backend:
+  cfw-backend:
     <<: *app
     container_name: cfw_dev_backend
     ports:
       - "8000:8000"
 
-  worker:
+  cfw-taskiq-worker:
     <<: *app
     container_name: cfw_dev_worker
     command:
@@ -24,11 +24,12 @@ services:
       - run
       - taskiq
       - worker
-      - app.utils.di_container:broker
+      - src.backend.app.utils.di.di_container:broker
+      - src.backend.app.utils.taskiq.tasks
       - --log-level
       - INFO
 
-  scheduler:
+  cfw-taskiq-scheduler:
     <<: *app
     container_name: cfw_dev_scheduler
     command:
@@ -36,12 +37,12 @@ services:
       - run
       - taskiq
       - scheduler
-      - app.utils.di_container:scheduler
+      - src.backend.app.utils.di.di_container:scheduler
       - --skip-first-run
       - --log-level
       - INFO
 
-  redis:
+  cfw-redis:
     image: redis:alpine
     container_name: cfw_dev_redis
     restart: unless-stopped
@@ -56,6 +57,20 @@ services:
       --maxmemory 256mb
       --maxmemory-policy allkeys-lru
 
+  cfw-postgres:
+    image: postgres:alpine
+    container_name: cfw_dev_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
 volumes:
   uv-venv:
   redis_data:
+  postgres_data:
