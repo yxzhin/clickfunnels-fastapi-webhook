@@ -73,7 +73,7 @@ services:
       redis-server
       --appendonly yes
       --save 60 1000
-      --maxmemory 256mb
+      --maxmemory 1024mb
       --maxmemory-policy allkeys-lru
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
