@@ -90,7 +90,7 @@ class ClickFunnelsUtils:
             return PageContextDefinition(
                 page=LandingPage.REGISTRATION_TODAY_LA,
                 register_type=RegisterType.TODAY,
-                welcome_sms_template=SmsTemplate.WELCOME_LA,
+                welcome_sms_template=SmsTemplate.LA_WELCOME_TODAY,
                 timezone=Helpers.LA_TZ,
                 workflow_definition=WORKFLOW_LA,
             )
@@ -99,7 +99,7 @@ class ClickFunnelsUtils:
             return PageContextDefinition(
                 page=LandingPage.REGISTRATION_TODAY_AU,
                 register_type=RegisterType.TODAY,
-                welcome_sms_template=SmsTemplate.WELCOME_AU,
+                welcome_sms_template=SmsTemplate.AU_WELCOME_TODAY,
                 timezone=Helpers.AU_TZ,
                 workflow_definition=WORKFLOW_AU,
             )
@@ -108,7 +108,7 @@ class ClickFunnelsUtils:
             return PageContextDefinition(
                 page=LandingPage.REGISTRATION_TOMORROW_LA,
                 register_type=RegisterType.TOMORROW,
-                welcome_sms_template=SmsTemplate.WELCOME_LA,
+                welcome_sms_template=SmsTemplate.LA_WELCOME_TOMORROW,
                 timezone=Helpers.LA_TZ,
                 workflow_definition=WORKFLOW_LA,
             )
@@ -117,7 +117,7 @@ class ClickFunnelsUtils:
             return PageContextDefinition(
                 page=LandingPage.REGISTRATION_TOMORROW_AU,
                 register_type=RegisterType.TOMORROW,
-                welcome_sms_template=SmsTemplate.WELCOME_AU,
+                welcome_sms_template=SmsTemplate.AU_WELCOME_TOMORROW,
                 timezone=Helpers.AU_TZ,
                 workflow_definition=WORKFLOW_AU,
             )

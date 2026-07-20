@@ -19,7 +19,7 @@ async def test_send_sms(twilio_client: TwilioClient) -> None:
     assert (
         await twilio_client.send_sms(
             to_phone=config.TWILIO_TEST_PHONE_NUMBER,
-            template=SmsTemplate.WELCOME_LA,
+            template=SmsTemplate.AU_WELCOME_TODAY,
         )
         is not None
     )

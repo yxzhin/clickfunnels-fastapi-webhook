@@ -34,7 +34,7 @@ async def test_serialize_page_context_definition(
         page_context_definition=PageContextDefinition(
             page=LandingPage.REGISTRATION_TODAY_LA,
             register_type=RegisterType.TODAY,
-            welcome_sms_template=SmsTemplate.WELCOME_LA,
+            welcome_sms_template=SmsTemplate.LA_WELCOME_TODAY,
             timezone=ZoneInfo("America/Los_Angeles"),
             workflow_definition=workflow_definition,
         ),
