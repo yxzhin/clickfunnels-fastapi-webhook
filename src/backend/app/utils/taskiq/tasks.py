@@ -8,6 +8,7 @@ from ...config import RegisterType, SmsTemplate, get_config
 from ..clickfunnels import ClickFunnelsClient, ClickFunnelsUtils
 from ..common import StructuredLogger
 from ..di import broker, ensure_schedule_source_ready, schedule_source
+from ..discord import DiscordClient
 from ..models import WorkflowBuilder
 from ..services import WebhookEventService
 from ..twilio import TwilioClient
@@ -189,3 +190,13 @@ async def schedule_sms_templates(
             phone_number=phone_number,
             template=template,
         )  # type: ignore
+
+
+@broker.task(task_name="discord.post_webhook")
+@inject(patch_module=True)
+async def post_discord_webhook_task(
+    message: str,
+    discord_client: FromDishka[DiscordClient],
+) -> None:
+    await discord_client.post_webhook(message=message)
+    StructuredLogger.info("tasks.discord.post_webhook.webhook_posted")
