@@ -3,6 +3,7 @@
 # as well as init a class that's used to store environment variables
 
 from functools import lru_cache
+from typing import Self
 
 from pydantic import Field
 from pydantic_settings import (
@@ -47,12 +48,14 @@ class Config(BaseSettings):
     REGISTRATION_TOMORROW_LA_PAGE_NAME: str = Field(min_length=1)
     REGISTRATION_TOMORROW_AU_PAGE_NAME: str = Field(min_length=1)
 
+    DISCORD_WEBHOOK_URL: str = Field(default="optional")
+
     @property
-    def api_base_url(self) -> str:
+    def api_base_url(self: Self) -> str:
         return f"https://{self.CLICKFUNNELS_SUBDOMAIN}.myclickfunnels.com/api/v2/workspaces/{self.CLICKFUNNELS_WORKSPACE_ID}"
 
     @property
-    def database_url(self) -> str:
+    def database_url(self: Self) -> str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     model_config = SettingsConfigDict(
@@ -65,7 +68,7 @@ class Config(BaseSettings):
 
     @classmethod
     def settings_customise_sources(
-        cls,
+        cls: type[Self],
         settings_cls: type[BaseSettings],
         init_settings: PydanticBaseSettingsSource,
         env_settings: PydanticBaseSettingsSource,
