@@ -83,3 +83,4 @@ class PageContextDefinition:
         )
     )
     workflow_definition: WorkflowDefinition
+    web_start_hour: int
