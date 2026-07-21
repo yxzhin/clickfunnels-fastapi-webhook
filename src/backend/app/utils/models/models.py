@@ -9,6 +9,7 @@ from ...config import LandingPage, RegisterType, SmsTemplate
 from ..common import Helpers
 
 
+@dataclass_json
 @dataclass(slots=True)
 class ClickFunnelsContact:
     id: str | int | None
@@ -64,6 +65,7 @@ class SmsStep:
     send_at_type: Literal["replace", "increment"]
 
 
+@dataclass_json
 @dataclass(slots=True, frozen=True)
 class WorkflowDefinition:
     today: list[SmsStep]
