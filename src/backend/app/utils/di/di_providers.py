@@ -6,8 +6,9 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...config import get_config
-from ..clickfunnels import ClickFunnelsClient
+from ..clickfunnels import ClickFunnelsAsyncClient, ClickFunnelsClient
 from ..db import Database
+from ..discord import DiscordAsyncClient, DiscordClient
 from ..services import WebhookEventService
 from ..twilio import TwilioClient
 
@@ -18,24 +19,25 @@ class AsyncClientProvider(Provider):
     def __init__(self: Self, httpx_client: AsyncClient | None = None) -> None:
         super().__init__()
         self._httpx_client = httpx_client
-        self._headers = {
-            "Authorization": f"Bearer {config.CLICKFUNNELS_API_TOKEN}",
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "User-Agent": "clickfunnels-fastapi-webhook/1.0",
-        }
-        self._base_url = config.api_base_url
 
     @provide(scope=Scope.APP)
-    async def async_client(self: Self) -> AsyncGenerator[AsyncClient, Any]:
+    async def clickfunnels_async_client(
+        self: Self,
+    ) -> AsyncGenerator[ClickFunnelsAsyncClient, Any]:
         if self._httpx_client is not None:
-            yield self._httpx_client
+            yield self._httpx_client  # type: ignore
         else:
-            async with AsyncClient(
-                timeout=15.0,
-                headers=self._headers,
-                base_url=self._base_url,
-            ) as httpx_client:
+            async with ClickFunnelsAsyncClient() as httpx_client:
+                yield httpx_client
+
+    @provide(scope=Scope.APP)
+    async def discord_async_client(
+        self: Self,
+    ) -> AsyncGenerator[DiscordAsyncClient, Any]:
+        if self._httpx_client is not None:
+            yield self._httpx_client  # type: ignore
+        else:
+            async with DiscordAsyncClient() as httpx_client:
                 yield httpx_client
 
 
@@ -43,9 +45,18 @@ class ClickFunnelsClientProvider(Provider):
     @provide(scope=Scope.APP)
     async def clickfunnels_client(
         self: Self,
-        httpx_client: AsyncClient,
+        httpx_client: ClickFunnelsAsyncClient,
     ) -> ClickFunnelsClient:
         return ClickFunnelsClient(httpx_client)
+
+
+class DiscordClientProvider(Provider):
+    @provide(scope=Scope.APP)
+    async def discord_client(
+        self: Self,
+        httpx_client: DiscordAsyncClient,
+    ) -> DiscordClient:
+        return DiscordClient(httpx_client)
 
 
 class TwilioClientProvider(Provider):

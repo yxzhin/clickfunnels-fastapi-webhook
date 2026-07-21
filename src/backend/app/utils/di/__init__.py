@@ -5,6 +5,7 @@ from .di_container import (
     schedule_source,
     scheduler,
 )
+from .di_providers import ClickFunnelsAsyncClient, DiscordAsyncClient
 
 __all__ = [
     "broker",
@@ -12,4 +13,6 @@ __all__ = [
     "ensure_schedule_source_ready",
     "schedule_source",
     "scheduler",
+    "ClickFunnelsAsyncClient",
+    "DiscordAsyncClient",
 ]
