@@ -9,11 +9,9 @@ config = get_config()
 
 class DiscordAsyncClient(AsyncClient):
     def __init__(self: Self, *args, **kwargs) -> None:
-        base_url = config.DISCORD_WEBHOOK_URL
         super().__init__(
             *args,
             **kwargs,
-            base_url=base_url,
             timeout=15.0,
         )
 
@@ -24,12 +22,12 @@ class DiscordClient:
 
     async def post_webhook(
         self: Self,
-        message: str,
+        content: str,
     ) -> None:
         response = await self._httpx_client.post(
-            "/",
+            config.DISCORD_WEBHOOK_URL,
             json={
-                "message": message,
+                "content": content,
             },
         )
         response.raise_for_status()

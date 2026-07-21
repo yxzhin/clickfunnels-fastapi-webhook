@@ -195,8 +195,8 @@ async def schedule_sms_templates(
 @broker.task(task_name="discord.post_webhook")
 @inject(patch_module=True)
 async def post_discord_webhook_task(
-    message: str,
+    content: str,
     discord_client: FromDishka[DiscordClient],
 ) -> None:
-    await discord_client.post_webhook(message=message)
+    await discord_client.post_webhook(content=content)
     StructuredLogger.info("tasks.discord.post_webhook.webhook_posted")
