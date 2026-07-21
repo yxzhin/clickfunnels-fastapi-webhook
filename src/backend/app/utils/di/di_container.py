@@ -10,6 +10,8 @@ from .di_providers import (
     AsyncClientProvider,
     ClickFunnelsClientProvider,
     DBSessionProvider,
+    DiscordClientProvider,
+    DiscordExceptionsLoggerProvider,
     ServiceProvider,
     TwilioClientProvider,
 )
@@ -50,6 +52,8 @@ container = make_async_container(
     AsyncClientProvider(),
     ClickFunnelsClientProvider(),
     DBSessionProvider(),
+    DiscordClientProvider(),
+    DiscordExceptionsLoggerProvider(),
     ServiceProvider(),
     TwilioClientProvider(
         account_sid=config.TWILIO_ACCOUNT_SID,
