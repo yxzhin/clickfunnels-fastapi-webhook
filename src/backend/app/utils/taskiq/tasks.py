@@ -23,25 +23,35 @@ async def process_clickfunnels_webhook(
     webhook_event_service: FromDishka[WebhookEventService],
 ) -> None:
     if config.LOG_RAW_PAYLOAD:
-        StructuredLogger.info("request.raw_payload", payload=payload)
+        StructuredLogger.info(
+            "request.raw_payload",
+            payload=payload,
+        )
 
     event_id = payload.get("event_id")
 
     if event_id is None:
-        StructuredLogger.error("request.event_id.not_found")
+        StructuredLogger.error(
+            "request.event_id.not_found",
+            payload=payload,
+        )
         return None
 
     try:
         event_id = UUID(event_id)
 
     except Exception:
-        StructuredLogger.error("request.event_id.invalid")
+        StructuredLogger.error(
+            "request.event_id.invalid",
+            event_id=event_id,
+        )
         return None
 
     created = await webhook_event_service.create_if_not_exists(event_id)
     if not created:
         StructuredLogger.warning(
-            "tasks.clickfunnels.process_webhook.event_already_exists"
+            "tasks.clickfunnels.process_webhook.event_already_exists",
+            event_id=event_id,
         )
         return None
 
@@ -58,13 +68,26 @@ async def process_clickfunnels_webhook(
     if page_context is None:
         StructuredLogger.error(
             "tasks.clickfunnels.process_webhook.unsupported_page",
+            page_name=contact.page_name,
         )
         return None
 
     now = datetime.now(tz=page_context.timezone)
 
     if page_context.register_type == RegisterType.TODAY:
-        plan = WorkflowBuilder.build_today(page_context.workflow_definition, now)
+        webinar_time = now.replace(hour=page_context.web_start_hour)
+
+        if now > webinar_time:
+            plan = WorkflowBuilder.build_tomorrow(page_context.workflow_definition, now)
+            StructuredLogger.warning(
+                "tasks.clickfunnels.process_webhook.register_today_delay_until_tomorrow",
+                now=now,
+                webinar_time=webinar_time,
+            )
+
+        else:
+            plan = WorkflowBuilder.build_today(page_context.workflow_definition, now)
+
         await clickfunnels_client.update_or_create_contact(
             body={
                 "contact": {
@@ -94,6 +117,7 @@ async def process_clickfunnels_webhook(
     StructuredLogger.info(
         "tasks.clickfunnels.process_webhook.plan_built",
         plan=plan,
+        sms_count=len(plan.sms_templates),
     )
 
     if contact.phone_number is not None:
@@ -101,22 +125,36 @@ async def process_clickfunnels_webhook(
             phone_number=contact.phone_number,
             template=page_context.welcome_sms_template,
         )  # type: ignore
-        StructuredLogger.info("tasks.clickfunnels.process_webhook.welcome_sms_sent")
+
+        StructuredLogger.info(
+            "tasks.clickfunnels.process_webhook.welcome_sms_sent",
+            phone_number=contact.phone_number,
+            template=page_context.welcome_sms_template,
+        )
+
         await schedule_sms_templates(
             phone_number=contact.phone_number,
             items=plan.sms_templates,
             timezone=page_context.timezone,
         )
-        StructuredLogger.info("tasks.clickfunnels.process_webhook.sms_scheduled")
+
+        StructuredLogger.info(
+            "tasks.clickfunnels.process_webhook.sms_scheduled",
+            phone_number=contact.phone_number,
+            items=plan.sms_templates,
+            timezone=page_context.timezone,
+        )
 
     else:
         StructuredLogger.warning(
             "tasks.clickfunnels.process_webhook.missing_phone_number",
-            contact_id=contact.id,
-            page_context=page_context,
+            contact=contact,
         )
 
-    StructuredLogger.info("tasks.clickfunnels.process_webhook.processed_successfully")
+    StructuredLogger.info(
+        "tasks.clickfunnels.process_webhook.processed_successfully",
+        event_id=event_id,
+    )
 
 
 @broker.task(task_name="twilio.send_sms")
@@ -126,7 +164,10 @@ async def send_sms_task(
     template: SmsTemplate,
     twilio_client: FromDishka[TwilioClient],
 ) -> None:
-    await twilio_client.send_sms(to_phone=phone_number, template=template)
+    await twilio_client.send_sms(
+        to_phone=phone_number,
+        template=template,
+    )
     StructuredLogger.info(
         "tasks.twilio.send_sms.sms_sent",
         to_phone=phone_number,
