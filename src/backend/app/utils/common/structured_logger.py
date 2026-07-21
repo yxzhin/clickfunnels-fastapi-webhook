@@ -128,6 +128,9 @@ class StructuredLogger:
         elif is_dataclass(value):
             return asdict(value)  # type: ignore
 
+        elif isinstance(value, datetime.datetime):
+            return value.isoformat()
+
         elif isinstance(value, ZoneInfo):
             return value.key
 
