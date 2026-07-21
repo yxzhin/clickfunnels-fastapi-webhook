@@ -10,7 +10,7 @@ class DiscordExceptionsLogger:
 
     def _format_message(self, event: str, **kwargs: Any) -> str:
         context = StructuredLogger._add_context(kwargs)
-        attrs = [f"- {key} => {value}" for key, value in context.items()]
+        attrs = "".join([f"- {key} => {value}\n" for key, value in context.items()])
         return f"# {event}\n{attrs}"
 
     async def warning(self: Self, event: str, **kwargs: Any) -> None:
