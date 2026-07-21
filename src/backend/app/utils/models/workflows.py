@@ -24,8 +24,8 @@ class WorkflowBuilder:
                     microsecond=0,
                 )
 
+                enabled = now < send_datetime
                 if step.attribute is not None:
-                    enabled = now < send_datetime
                     custom_attributes[step.attribute] = str(int(enabled))
 
             elif step.send_at_type == "increment":
