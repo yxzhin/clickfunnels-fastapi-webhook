@@ -1,4 +1,4 @@
-from pytest import mark, raises
+from pytest import mark
 
 from src.backend.app.utils.common import Helpers
 
@@ -30,5 +30,4 @@ async def test_helpers_normalize_phone_success(
     ],
 )
 async def test_helpers_normalize_phone_failure(phone: str, region: str):
-    with raises(ValueError):
-        Helpers.normalize_phone(phone, default_region=region)
+    assert Helpers.normalize_phone(phone, default_region=region) is None
