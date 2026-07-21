@@ -13,6 +13,11 @@ class DiscordLogger:
         attrs = "".join([f"- {key} => {value}\n" for key, value in context.items()])
         return f"# {event}\n{attrs}"
 
+    async def info(self: Self, event: str, **kwargs: Any) -> None:
+        message = self._format_message(event=event, kwargs=kwargs)
+        await self._sender(message)
+        return StructuredLogger.info(event, **kwargs)
+
     async def warning(self: Self, event: str, **kwargs: Any) -> None:
         message = self._format_message(event=event, kwargs=kwargs)
         await self._sender(message)
