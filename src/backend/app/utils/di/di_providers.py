@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...config import get_config
 from ..clickfunnels import ClickFunnelsAsyncClient, ClickFunnelsClient
 from ..db import Database
-from ..discord import DiscordAsyncClient, DiscordClient
+from ..discord import DiscordAsyncClient, DiscordClient, DiscordExceptionsLogger
 from ..services import WebhookEventService
 from ..twilio import TwilioClient
 
@@ -82,7 +82,7 @@ class TwilioClientProvider(Provider):
 
 class ServiceProvider(Provider):
     @provide(scope=Scope.REQUEST)
-    async def webhook_event_service_provider(
+    async def webhook_event_service(
         self: Self,
         db_sess: AsyncSession,
     ) -> WebhookEventService:
@@ -104,3 +104,14 @@ class DBSessionProvider(Provider):
         else:
             async with Database.get_session() as session:
                 yield session
+
+
+class DiscordExceptionsLoggerProvider(Provider):
+    async def _send(self: Self, message: str) -> None:
+        from ..taskiq.tasks import post_discord_webhook_task
+
+        await post_discord_webhook_task.kiq(message)  # type: ignore
+
+    @provide(scope=Scope.APP)
+    async def discord_exceptions_logger(self: Self) -> DiscordExceptionsLogger:
+        return DiscordExceptionsLogger(self._send)
