@@ -2,7 +2,7 @@ from hashlib import sha256
 from hmac import compare_digest, new
 from typing import Any
 
-from ...config import LandingPage, RegisterType, SmsTemplate, get_config
+from ...config import LandingPage, RegisterType, SmsTemplate, WebinarTime, get_config
 from ..common import Helpers, StructuredLogger
 from ..models import (
     WORKFLOW_AU,
@@ -93,6 +93,7 @@ class ClickFunnelsUtils:
                 welcome_sms_template=SmsTemplate.LA_WELCOME_TODAY,
                 timezone=Helpers.LA_TZ,
                 workflow_definition=WORKFLOW_LA,
+                web_start_hour=WebinarTime.LA_WEB_START_TIME.value,
             )
 
         if page_name == config.REGISTRATION_TODAY_AU_PAGE_NAME:
@@ -102,6 +103,7 @@ class ClickFunnelsUtils:
                 welcome_sms_template=SmsTemplate.AU_WELCOME_TODAY,
                 timezone=Helpers.AU_TZ,
                 workflow_definition=WORKFLOW_AU,
+                web_start_hour=WebinarTime.AU_WEB_START_TIME.value,
             )
 
         if page_name == config.REGISTRATION_TOMORROW_LA_PAGE_NAME:
@@ -111,6 +113,7 @@ class ClickFunnelsUtils:
                 welcome_sms_template=SmsTemplate.LA_WELCOME_TOMORROW,
                 timezone=Helpers.LA_TZ,
                 workflow_definition=WORKFLOW_LA,
+                web_start_hour=WebinarTime.LA_WEB_START_TIME.value,
             )
 
         if page_name == config.REGISTRATION_TOMORROW_AU_PAGE_NAME:
@@ -120,6 +123,7 @@ class ClickFunnelsUtils:
                 welcome_sms_template=SmsTemplate.AU_WELCOME_TOMORROW,
                 timezone=Helpers.AU_TZ,
                 workflow_definition=WORKFLOW_AU,
+                web_start_hour=WebinarTime.AU_WEB_START_TIME.value,
             )
 
         return None

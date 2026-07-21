@@ -3,7 +3,7 @@ from zoneinfo import ZoneInfo
 
 from pytest import fixture
 
-from src.backend.app.config import LandingPage, RegisterType, SmsTemplate
+from src.backend.app.config import LandingPage, RegisterType, SmsTemplate, WebinarTime
 from src.backend.app.utils.common import StructuredLogger
 from src.backend.app.utils.models import (
     PageContextDefinition,
@@ -37,6 +37,7 @@ async def test_serialize_page_context_definition(
             welcome_sms_template=SmsTemplate.LA_WELCOME_TODAY,
             timezone=ZoneInfo("America/Los_Angeles"),
             workflow_definition=workflow_definition,
+            web_start_hour=WebinarTime.LA_WEB_START_TIME.value,
         ),
     )
 
