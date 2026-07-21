@@ -1,4 +1,4 @@
-from enum import StrEnum
+from enum import Enum, StrEnum
 from typing import Self
 
 
@@ -43,3 +43,8 @@ class SmsTemplate(StrEnum):
 class RegisterType(StrEnum):
     TODAY = "today"
     TOMORROW = "tomorrow"
+
+
+class WebinarTime(Enum):
+    LA_WEB_START_TIME = 15
+    AU_WEB_START_TIME = 19

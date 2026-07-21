@@ -1,5 +1,5 @@
 from .conf import Config, get_config
-from .enums import LandingPage, RegisterType, SmsTemplate
+from .enums import LandingPage, RegisterType, SmsTemplate, WebinarTime
 
 __all__ = [
     "Config",
@@ -7,4 +7,5 @@ __all__ = [
     "LandingPage",
     "RegisterType",
     "SmsTemplate",
+    "WebinarTime",
 ]
