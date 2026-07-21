@@ -8,7 +8,7 @@ from ...config import RegisterType, SmsTemplate, get_config
 from ..clickfunnels import ClickFunnelsClient, ClickFunnelsUtils
 from ..common import StructuredLogger
 from ..di import broker, ensure_schedule_source_ready, schedule_source
-from ..discord import DiscordClient
+from ..discord import DiscordClient, DiscordLogger
 from ..models import WorkflowBuilder
 from ..services import WebhookEventService
 from ..twilio import TwilioClient
@@ -22,6 +22,7 @@ async def process_clickfunnels_webhook(
     payload: dict,
     clickfunnels_client: FromDishka[ClickFunnelsClient],
     webhook_event_service: FromDishka[WebhookEventService],
+    discord_logger: FromDishka[DiscordLogger],
 ) -> None:
     if config.LOG_RAW_PAYLOAD:
         StructuredLogger.info(
@@ -32,7 +33,7 @@ async def process_clickfunnels_webhook(
     event_id = payload.get("event_id")
 
     if event_id is None:
-        StructuredLogger.error(
+        await discord_logger.error(
             "request.event_id.not_found",
             payload=payload,
         )
@@ -42,7 +43,7 @@ async def process_clickfunnels_webhook(
         event_id = UUID(event_id)
 
     except Exception:
-        StructuredLogger.error(
+        await discord_logger.error(
             "request.event_id.invalid",
             event_id=event_id,
         )
@@ -50,7 +51,7 @@ async def process_clickfunnels_webhook(
 
     created = await webhook_event_service.create_if_not_exists(event_id)
     if not created:
-        StructuredLogger.warning(
+        await discord_logger.warning(
             "tasks.clickfunnels.process_webhook.event_already_exists",
             event_id=event_id,
         )
@@ -67,7 +68,7 @@ async def process_clickfunnels_webhook(
 
     page_context = ClickFunnelsUtils.resolve_page(contact.page_name)
     if page_context is None:
-        StructuredLogger.error(
+        await discord_logger.error(
             "tasks.clickfunnels.process_webhook.unsupported_page",
             page_name=contact.page_name,
         )
@@ -80,7 +81,7 @@ async def process_clickfunnels_webhook(
 
         if now > webinar_time:
             plan = WorkflowBuilder.build_tomorrow(page_context.workflow_definition, now)
-            StructuredLogger.warning(
+            await discord_logger.warning(
                 "tasks.clickfunnels.process_webhook.register_today_delay_until_tomorrow",
                 now=now,
                 webinar_time=webinar_time,
@@ -105,7 +106,7 @@ async def process_clickfunnels_webhook(
         plan = WorkflowBuilder.build_tomorrow(page_context.workflow_definition, now)
 
     else:
-        StructuredLogger.error(
+        await discord_logger.error(
             "tasks.clickfunnels.process_webhook.unresolved_register_type",
             page_context=page_context,
         )
@@ -127,7 +128,7 @@ async def process_clickfunnels_webhook(
             template=page_context.welcome_sms_template,
         )  # type: ignore
 
-        StructuredLogger.info(
+        await discord_logger.info(
             "tasks.clickfunnels.process_webhook.welcome_sms_sent",
             phone_number=contact.phone_number,
             template=page_context.welcome_sms_template,
@@ -147,7 +148,7 @@ async def process_clickfunnels_webhook(
         )
 
     else:
-        StructuredLogger.warning(
+        await discord_logger.warning(
             "tasks.clickfunnels.process_webhook.missing_phone_number",
             contact=contact,
         )
