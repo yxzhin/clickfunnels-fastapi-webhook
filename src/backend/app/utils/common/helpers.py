@@ -11,6 +11,8 @@ from phonenumbers import (
     parse,
 )
 
+from .structured_logger import StructuredLogger
+
 
 class Helpers:
     """utility class w/ general helper functions so I don't repeat myself"""
@@ -59,13 +61,21 @@ class Helpers:
     def normalize_phone(
         phone: str,
         default_region: str | None = None,
-    ) -> str:
+    ) -> str | None:
         try:
             parsed = parse(phone, default_region)
-        except NumberParseException as exc:
-            raise ValueError(str(exc)) from exc
+        except NumberParseException:
+            StructuredLogger.exception(
+                "helpers.normalize_phone.invalid_phone_number",
+                phone=phone,
+            )
+            return None
 
         if not is_valid_number(parsed):
-            raise ValueError(f"Invalid phone number: {phone!r}")
+            StructuredLogger.exception(
+                "helpers.normalize_phone.invalid_phone_number",
+                phone=phone,
+            )
+            return None
 
         return format_number(parsed, PhoneNumberFormat.E164)
