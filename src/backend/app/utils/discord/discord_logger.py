@@ -4,7 +4,7 @@ from typing import Any, Self
 from ..common import StructuredLogger
 
 
-class DiscordExceptionsLogger:
+class DiscordLogger:
     def __init__(self: Self, sender: Callable[[str], Any]) -> None:
         self._sender = sender
 
