@@ -7,7 +7,12 @@ from .models import (
     WorkflowDefinition,
     WorkflowPlan,
 )
-from .workflows import WORKFLOW_AU, WORKFLOW_LA, WorkflowBuilder
+from .workflows import (
+    WORKFLOW_AU,
+    WORKFLOW_LA,
+    WORKFLOW_LIVE_ONLINE_WEBINAR,
+    WorkflowBuilder,
+)
 
 __all__ = [
     "WebhookEvent",
@@ -19,5 +24,6 @@ __all__ = [
     "WorkflowPlan",
     "WORKFLOW_AU",
     "WORKFLOW_LA",
+    "WORKFLOW_LIVE_ONLINE_WEBINAR",
     "WorkflowBuilder",
 ]
