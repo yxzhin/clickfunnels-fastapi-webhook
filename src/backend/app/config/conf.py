@@ -47,6 +47,7 @@ class Config(BaseSettings):
     REGISTRATION_TODAY_AU_PAGE_NAME: str = Field(min_length=1)
     REGISTRATION_TOMORROW_LA_PAGE_NAME: str = Field(min_length=1)
     REGISTRATION_TOMORROW_AU_PAGE_NAME: str = Field(min_length=1)
+    LIVE_ONLINE_WEBINAR_PAGE_NAME: str = Field(min_length=1)
 
     DISCORD_WEBHOOK_URL: str = Field(default="optional")
 
