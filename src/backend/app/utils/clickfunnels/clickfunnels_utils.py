@@ -7,6 +7,7 @@ from ..common import Helpers, StructuredLogger
 from ..models import (
     WORKFLOW_AU,
     WORKFLOW_LA,
+    WORKFLOW_LIVE_ONLINE_WEBINAR,
     ClickFunnelsContact,
     PageContextDefinition,
 )
@@ -124,6 +125,16 @@ class ClickFunnelsUtils:
                 timezone=Helpers.AU_TZ,
                 workflow_definition=WORKFLOW_AU,
                 web_start_hour=WebinarTime.AU_WEB_START_TIME.value,
+            )
+
+        if page_name == config.LIVE_ONLINE_WEBINAR_PAGE_NAME:
+            return PageContextDefinition(
+                page=LandingPage.REGISTRATION_LIVE_ONLINE_WEBINAR,
+                register_type=RegisterType.TOMORROW,
+                welcome_sms_template=SmsTemplate.LIVE_ONLINE_WEBINAR_WELCOME,
+                timezone=Helpers.LA_TZ,
+                workflow_definition=WORKFLOW_LIVE_ONLINE_WEBINAR,
+                web_start_hour=0,
             )
 
         return None

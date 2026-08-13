@@ -85,4 +85,4 @@ class PageContextDefinition:
         )
     )
     workflow_definition: WorkflowDefinition
-    web_start_hour: int
+    web_start_hour: int | None
