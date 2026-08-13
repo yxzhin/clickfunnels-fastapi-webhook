@@ -134,7 +134,7 @@ class ClickFunnelsUtils:
                 welcome_sms_template=SmsTemplate.LIVE_ONLINE_WEBINAR_WELCOME,
                 timezone=Helpers.LA_TZ,
                 workflow_definition=WORKFLOW_LIVE_ONLINE_WEBINAR,
-                web_start_hour=0,
+                web_start_hour=None,
             )
 
         return None
