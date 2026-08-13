@@ -8,6 +8,8 @@ class LandingPage(StrEnum):
     REGISTRATION_TODAY_AU = "registration-today-au"
     REGISTRATION_TOMORROW_AU = "registration-tomorrow-au"
 
+    REGISTRATION_LIVE_ONLINE_WEBINAR = "registration-live-online-webinar"
+
 
 class SmsTemplate(StrEnum):
     LA_WELCOME_TODAY = "Hi, you’re registered for Yuliya’s FREE Russian Manicure webinar today at 3 PM PT / 6 PM ET. Save the time – your join link will arrive before we start."
@@ -32,8 +34,20 @@ class SmsTemplate(StrEnum):
     AU_1_DAY_AFTER_WEB = "Still dealing with lifting, uneven structure, or sets that take too long? Learn the full system step by step. Your special offer is still available: https://cf.ybcourses.online/learnrussian-manicure?utm_source=web_email"
     AU_2_DAYS_AFTER_WEB = "Last chance to get the special webinar offer for Yuliya’s online nail courses. Upgrade your skills and work with more confidence: https://cf.ybcourses.online/learnrussian-manicure?utm_source=web_email"
 
-    # AFTER_REG_5_MINUTES = "AFTER_REG_5_MINUTES"
-    # AFTER_REG_1_HOUR = "AFTER_REG_1_HOUR"
+    LIVE_ONLINE_WEBINAR_WELCOME = "Hi, you’re registered for Yuliya’s FREE Russian Manicure webinar August 19 at 3 PM PT / 6 PM ET. Save the time – your join link will arrive before we start."
+    LIVE_ONLINE_WEBINAR_1_DAY_AFTER_REG = "Reminder: live Russian Manicure webinar — August 19, 6 PM PT / 9 PM ET. RM, Hard Gel, Dual Forms & $100+ services. Join: https://start.bizon365.ru/room/ybprofessional/veb19"
+    LIVE_ONLINE_WEBINAR_1_DAY_BEFORE_WEB = "Tomorrow: live webinar with Yuliya at 6 PM PT / 9 PM ET. Russian Manicure, Hard Gel & Dual Forms. Join: https://start.bizon365.ru/room/ybprofessional/veb19"
+    LIVE_ONLINE_WEBINAR_MORNING_REMINDER = "Today at 6 PM PT / 9 PM ET. Yuliya will show Russian Manicure + Dual Forms process videos. Join: https://start.bizon365.ru/room/ybprofessional/veb19"
+    LIVE_ONLINE_WEBINAR_3_HOURS_BEFORE = "Starting in 3 hours. Russian Manicure, Hard Gel & Dual Forms. Join the live webinar: https://start.bizon365.ru/room/ybprofessional/veb19"
+    LIVE_ONLINE_WEBINAR_1_HOUR_BEFORE = "Starting in 1 hour. Join the live webinar: https://start.bizon365.ru/room/ybprofessional/veb19"
+    LIVE_ONLINE_WEBINAR_START = (
+        "We’re live now. Join here: https://start.bizon365.ru/room/ybprofessional/veb19"
+    )
+    LIVE_ONLINE_WEBINAR_10_MINUTES_AFTER_START = "We’re live — Russian Manicure, Hard Gel, Dual Forms & premium results. Join: https://start.bizon365.ru/room/ybprofessional/veb19"
+    LIVE_ONLINE_WEBINAR_AFTER_WEB = "Thank you for joining the webinar 💅 Your special offer is open: get the Complete Nail System for $399 instead of $787. Enroll here: https://cf.ybcourses.online/learnrussian-manicure?utm_source=web_email"
+    LIVE_ONLINE_WEBINAR_AFTER_WEB_2 = "Ready to stop guessing and start working with a real system? Russian Manicure + Hard Gel + Dual Forms are now available in one package for $399 instead of $787. Join here: https://cf.ybcourses.online/learnrussian-manicure?utm_source=web_email"
+    LIVE_ONLINE_WEBINAR_1_DAY_AFTER = "Reminder: your webinar discount is still active. Get the full combo course for $399 instead of $787 and learn the system behind $100–150 nail services. Secure your access: https://cf.ybcourses.online/learnrussian-manicure?utm_source=web_email"
+    LIVE_ONLINE_WEBINAR_2_DAYS_AFTER = "Last chance to get the Complete Nail System for $399 instead of $787. After the offer closes, the regular price returns. Join now: https://cf.ybcourses.online/learnrussian-manicure?utm_source=web_email"
 
     @property
     def text(self: Self) -> str:
