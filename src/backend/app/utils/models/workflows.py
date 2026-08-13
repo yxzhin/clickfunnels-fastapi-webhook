@@ -18,12 +18,13 @@ class WorkflowBuilder:
 
             if step.send_at_type == "replace":
                 send_datetime = now.replace(
-                    day=step.send_at.days,
                     hour=step.send_at.hours,
                     minute=step.send_at.minutes,
                     second=0,
                     microsecond=0,
                 )
+                if step.send_at.days > 0:
+                    send_datetime = send_datetime.replace(day=step.send_at.days)
 
                 enabled = now < send_datetime
                 if step.attribute is not None:
@@ -58,12 +59,13 @@ class WorkflowBuilder:
         for step in definition.tomorrow:
             if step.send_at_type == "replace":
                 send_datetime = tomorrow.replace(
-                    day=step.send_at.days,
                     hour=step.send_at.hours,
                     minute=step.send_at.minutes,
                     second=0,
                     microsecond=0,
                 )
+                if step.send_at.days > 0:
+                    send_datetime = send_datetime.replace(day=step.send_at.days)
 
             elif step.send_at_type == "increment":
                 send_datetime = now + timedelta(
