@@ -88,6 +88,9 @@ class StructuredLogger:
         if isinstance(value, Enum):
             return value.value
 
+        elif isinstance(value, uuid.UUID):
+            return value.hex
+
         elif isinstance(value, (KeysView, ValuesView, ItemsView)):
             return StructuredLogger._simplify_internal(
                 list(value),  # type: ignore
