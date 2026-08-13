@@ -130,7 +130,7 @@ class ClickFunnelsUtils:
         if page_name == config.LIVE_ONLINE_WEBINAR_PAGE_NAME:
             return PageContextDefinition(
                 page=LandingPage.REGISTRATION_LIVE_ONLINE_WEBINAR,
-                register_type=RegisterType.TOMORROW,
+                register_type=RegisterType.TODAY,
                 welcome_sms_template=SmsTemplate.LIVE_ONLINE_WEBINAR_WELCOME,
                 timezone=Helpers.LA_TZ,
                 workflow_definition=WORKFLOW_LIVE_ONLINE_WEBINAR,
