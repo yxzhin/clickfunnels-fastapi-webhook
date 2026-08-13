@@ -7,5 +7,6 @@
   "settings": {
     "ruff.enable": true,
     "ruff.lint.enable": true,
+    "basedpyright.disableLanguageServices": true,
   },
 }
