@@ -18,6 +18,7 @@ class WorkflowBuilder:
 
             if step.send_at_type == "replace":
                 send_datetime = now.replace(
+                    day=step.send_at.days,
                     hour=step.send_at.hours,
                     minute=step.send_at.minutes,
                     second=0,
@@ -30,6 +31,7 @@ class WorkflowBuilder:
 
             elif step.send_at_type == "increment":
                 send_datetime = now + timedelta(
+                    days=step.send_at.days,
                     hours=step.send_at.hours,
                     minutes=step.send_at.minutes,
                 )
@@ -56,6 +58,7 @@ class WorkflowBuilder:
         for step in definition.tomorrow:
             if step.send_at_type == "replace":
                 send_datetime = tomorrow.replace(
+                    day=step.send_at.days,
                     hour=step.send_at.hours,
                     minute=step.send_at.minutes,
                     second=0,
@@ -64,6 +67,7 @@ class WorkflowBuilder:
 
             elif step.send_at_type == "increment":
                 send_datetime = now + timedelta(
+                    days=step.send_at.days,
                     hours=step.send_at.hours,
                     minutes=step.send_at.minutes,
                 )
@@ -128,4 +132,78 @@ WORKFLOW_AU = WorkflowDefinition(
         SmsStep(None, SmsTemplate.AU_1_DAY_AFTER_WEB, Time(48, 0), "increment"),
         SmsStep(None, SmsTemplate.AU_2_DAYS_AFTER_WEB, Time(72, 0), "increment"),
     ],
+)
+
+LIVE_ONLINE_WEBINAR_SMS_STEPS = [
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_1_DAY_AFTER_REG,
+        Time(24, 0),
+        "increment",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_1_DAY_BEFORE_WEB,
+        Time(10, 0, 18),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_MORNING_REMINDER,
+        Time(9, 0, 19),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_3_HOURS_BEFORE,
+        Time(15, 0, 19),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_1_HOUR_BEFORE,
+        Time(17, 0, 19),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_START,
+        Time(18, 0, 19),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_10_MINUTES_AFTER_START,
+        Time(18, 10, 19),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_AFTER_WEB,
+        Time(19, 30, 19),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_AFTER_WEB_2,
+        Time(21, 0, 19),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_1_DAY_AFTER,
+        Time(10, 0, 20),
+        "replace",
+    ),
+    SmsStep(
+        None,
+        SmsTemplate.LIVE_ONLINE_WEBINAR_2_DAYS_AFTER,
+        Time(10, 0, 21),
+        "replace",
+    ),
+]
+
+WORKFLOW_LIVE_ONLINE_WEBINAR = WorkflowDefinition(
+    today=LIVE_ONLINE_WEBINAR_SMS_STEPS,
+    tomorrow=LIVE_ONLINE_WEBINAR_SMS_STEPS,
 )
