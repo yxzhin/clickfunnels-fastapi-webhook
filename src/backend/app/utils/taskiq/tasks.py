@@ -77,30 +77,39 @@ async def process_clickfunnels_webhook(
     now = datetime.now(tz=page_context.timezone)
 
     if page_context.register_type == RegisterType.TODAY:
-        webinar_time = now.replace(hour=page_context.web_start_hour)
+        if page_context.web_start_hour is not None:
+            webinar_time = now.replace(hour=page_context.web_start_hour)
 
-        if now > webinar_time:
-            plan = WorkflowBuilder.build_tomorrow(page_context.workflow_definition, now)
-            await discord_logger.warning(
-                "tasks.clickfunnels.process_webhook.register_today_delay_until_tomorrow",
-                now=now,
-                webinar_time=webinar_time,
-            )
+            if now > webinar_time:
+                plan = WorkflowBuilder.build_tomorrow(
+                    page_context.workflow_definition, now
+                )
+                await discord_logger.warning(
+                    "tasks.clickfunnels.process_webhook.register_today_delay_until_tomorrow",
+                    now=now,
+                    webinar_time=webinar_time,
+                )
+
+            else:
+                plan = WorkflowBuilder.build_today(
+                    page_context.workflow_definition, now
+                )
 
         else:
             plan = WorkflowBuilder.build_today(page_context.workflow_definition, now)
 
-        await clickfunnels_client.update_or_create_contact(
-            body={
-                "contact": {
-                    "custom_attributes": plan.custom_attributes,
-                    "email_address": contact.email,
-                    "phone_number": contact.phone_number,
-                    "first_name": contact.first_name,
-                    "last_name": contact.last_name,
+        if len(plan.custom_attributes) > 0:
+            await clickfunnels_client.update_or_create_contact(
+                body={
+                    "contact": {
+                        "custom_attributes": plan.custom_attributes,
+                        "email_address": contact.email,
+                        "phone_number": contact.phone_number,
+                        "first_name": contact.first_name,
+                        "last_name": contact.last_name,
+                    },
                 },
-            },
-        )
+            )
 
     elif page_context.register_type == RegisterType.TOMORROW:
         plan = WorkflowBuilder.build_tomorrow(page_context.workflow_definition, now)
