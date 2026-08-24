@@ -34,8 +34,8 @@ class SmsTemplate(StrEnum):
     AU_1_DAY_AFTER_WEB = "Still dealing with lifting, uneven structure, or sets that take too long? Learn the full system step by step. Your special offer is still available: https://cf.ybcourses.online/learnrussian-manicure?utm_source=web_email"
     AU_2_DAYS_AFTER_WEB = "Last chance to get the special webinar offer for Yuliya’s online nail courses. Upgrade your skills and work with more confidence: https://cf.ybcourses.online/learnrussian-manicure?utm_source=web_email"
 
-    LIVE_ONLINE_WEBINAR_WELCOME = "Hi, you’re registered for Yuliya’s FREE Russian Manicure webinar August 19 at 3 PM PT / 6 PM ET. Save the time – your join link will arrive before we start."
-    LIVE_ONLINE_WEBINAR_1_DAY_AFTER_REG = "Reminder: live Russian Manicure webinar — August 19, 6 PM PT / 9 PM ET. RM, Hard Gel, Dual Forms & $100+ services. Join: https://start.bizon365.ru/room/ybprofessional/veb27"
+    LIVE_ONLINE_WEBINAR_WELCOME = "Hi, you’re registered for Yuliya’s FREE Russian Manicure webinar August 27 at 3 PM PT / 6 PM ET. Save the time – your join link will arrive before we start."
+    LIVE_ONLINE_WEBINAR_1_DAY_AFTER_REG = "Reminder: live Russian Manicure webinar — August 27, 6 PM PT / 9 PM ET. RM, Hard Gel, Dual Forms & $100+ services. Join: https://start.bizon365.ru/room/ybprofessional/veb27"
     LIVE_ONLINE_WEBINAR_1_DAY_BEFORE_WEB = "Tomorrow: live webinar with Yuliya at 6 PM PT / 9 PM ET. Russian Manicure, Hard Gel & Dual Forms. Join: https://start.bizon365.ru/room/ybprofessional/veb27"
     LIVE_ONLINE_WEBINAR_MORNING_REMINDER = "Today at 6 PM PT / 9 PM ET. Yuliya will show Russian Manicure + Dual Forms process videos. Join: https://start.bizon365.ru/room/ybprofessional/veb27"
     LIVE_ONLINE_WEBINAR_3_HOURS_BEFORE = "Starting in 3 hours. Russian Manicure, Hard Gel & Dual Forms. Join the live webinar: https://start.bizon365.ru/room/ybprofessional/veb27"
