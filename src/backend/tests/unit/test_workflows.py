@@ -29,17 +29,49 @@ async def page_context_au() -> PageContextDefinition:
 # la
 
 
+async def test_workflow_plan_build_today_earliest_la(
+    page_context_la: PageContextDefinition,
+) -> None:
+    dt = datetime(2026, 7, 14, 10, 30, tzinfo=page_context_la.timezone)
+    plan = WorkflowBuilder.build_today(page_context_la.workflow_definition, dt)
+    assert plan.custom_attributes == {
+        "send_email11_00_la": "1",
+        "send_email12_00_la": "1",
+        "send_email13_00_la": "1",
+        "send_email14_00_la": "1",
+        "send_email14_50_la": "1",
+    }
+    assert len(plan.sms_templates) == 11
+
+
+async def test_workflow_plan_build_today_earlier_la(
+    page_context_la: PageContextDefinition,
+) -> None:
+    dt = datetime(2026, 7, 14, 11, 30, tzinfo=page_context_la.timezone)
+    plan = WorkflowBuilder.build_today(page_context_la.workflow_definition, dt)
+    assert plan.custom_attributes == {
+        "send_email11_00_la": "0",
+        "send_email12_00_la": "1",
+        "send_email13_00_la": "1",
+        "send_email14_00_la": "1",
+        "send_email14_50_la": "1",
+    }
+    assert len(plan.sms_templates) == 10
+
+
 async def test_workflow_plan_build_today_early_la(
     page_context_la: PageContextDefinition,
 ) -> None:
     dt = datetime(2026, 7, 14, 12, 30, tzinfo=page_context_la.timezone)
     plan = WorkflowBuilder.build_today(page_context_la.workflow_definition, dt)
     assert plan.custom_attributes == {
-        "send_email15": "1",
-        "send_email17": "1",
-        "send_email19": "1",
+        "send_email11_00_la": "0",
+        "send_email12_00_la": "0",
+        "send_email13_00_la": "1",
+        "send_email14_00_la": "1",
+        "send_email14_50_la": "1",
     }
-    assert len(plan.sms_templates) == 7
+    assert len(plan.sms_templates) == 9
 
 
 async def test_workflow_plan_build_today_mid_la(
@@ -48,11 +80,13 @@ async def test_workflow_plan_build_today_mid_la(
     dt = datetime(2026, 7, 14, 13, 30, tzinfo=page_context_la.timezone)
     plan = WorkflowBuilder.build_today(page_context_la.workflow_definition, dt)
     assert plan.custom_attributes == {
-        "send_email15": "0",
-        "send_email17": "1",
-        "send_email19": "1",
+        "send_email11_00_la": "0",
+        "send_email12_00_la": "0",
+        "send_email13_00_la": "0",
+        "send_email14_00_la": "1",
+        "send_email14_50_la": "1",
     }
-    assert len(plan.sms_templates) == 6
+    assert len(plan.sms_templates) == 8
 
 
 async def test_workflow_plan_build_today_late_la(
@@ -61,11 +95,28 @@ async def test_workflow_plan_build_today_late_la(
     dt = datetime(2026, 7, 14, 14, 30, tzinfo=page_context_la.timezone)
     plan = WorkflowBuilder.build_today(page_context_la.workflow_definition, dt)
     assert plan.custom_attributes == {
-        "send_email15": "0",
-        "send_email17": "0",
-        "send_email19": "1",
+        "send_email11_00_la": "0",
+        "send_email12_00_la": "0",
+        "send_email13_00_la": "0",
+        "send_email14_00_la": "0",
+        "send_email14_50_la": "1",
     }
-    assert len(plan.sms_templates) == 5
+    assert len(plan.sms_templates) == 7
+
+
+async def test_workflow_plan_build_today_latest_la(
+    page_context_la: PageContextDefinition,
+) -> None:
+    dt = datetime(2026, 7, 14, 14, 55, tzinfo=page_context_la.timezone)
+    plan = WorkflowBuilder.build_today(page_context_la.workflow_definition, dt)
+    assert plan.custom_attributes == {
+        "send_email11_00_la": "0",
+        "send_email12_00_la": "0",
+        "send_email13_00_la": "0",
+        "send_email14_00_la": "0",
+        "send_email14_50_la": "0",
+    }
+    assert len(plan.sms_templates) == 6
 
 
 async def test_workflow_plan_build_tomorrow_la(
@@ -74,10 +125,10 @@ async def test_workflow_plan_build_tomorrow_la(
     dt = datetime(2026, 7, 14, 9, 0, tzinfo=page_context_la.timezone)
     plan = WorkflowBuilder.build_tomorrow(page_context_la.workflow_definition, dt)
     assert plan.custom_attributes == {}
-    assert len(plan.sms_templates) == 8
+    assert len(plan.sms_templates) == 10
 
 
-# au
+# //au is temporarily deprecated
 
 
 async def test_workflow_plan_build_today_early_au(
@@ -134,11 +185,13 @@ async def test_workflow_plan_build_today_after_web_la(
     dt = datetime(2026, 7, 14, 17, 30, tzinfo=page_context_la.timezone)
     plan = WorkflowBuilder.build_today(page_context_la.workflow_definition, dt)
     assert plan.custom_attributes == {
-        "send_email15": "0",
-        "send_email17": "0",
-        "send_email19": "0",
+        "send_email11_00_la": "0",
+        "send_email12_00_la": "0",
+        "send_email13_00_la": "0",
+        "send_email14_00_la": "0",
+        "send_email14_50_la": "0",
     }
-    assert len(plan.sms_templates) == 2
+    assert len(plan.sms_templates) == 3
 
 
 async def test_workflow_plan_build_today_after_web_au(
