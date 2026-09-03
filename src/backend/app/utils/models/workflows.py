@@ -87,6 +87,9 @@ WORKFLOW_LA = WorkflowDefinition(
         # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
         # SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
         SmsStep(
+            "send_email11_00_la", SmsTemplate.LA_4_HOURS_BEFORE, Time(11, 0), "replace"
+        ),
+        SmsStep(
             "send_email12_00_la", SmsTemplate.LA_3_HOURS_BEFORE, Time(12, 0), "replace"
         ),
         SmsStep(
