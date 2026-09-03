@@ -86,28 +86,47 @@ WORKFLOW_LA = WorkflowDefinition(
     today=[
         # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
         # SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
-        SmsStep("send_email15", SmsTemplate.LA_2_HOURS_BEFORE, Time(13, 0), "replace"),
-        SmsStep("send_email17", SmsTemplate.LA_1_HOUR_BEFORE, Time(14, 0), "replace"),
-        SmsStep("send_email19", SmsTemplate.LA_START, Time(15, 0), "replace"),
-        SmsStep(None, SmsTemplate.LA_15_MINUTES_AFTER_START, Time(15, 15), "replace"),
-        SmsStep(None, SmsTemplate.LA_1_HOUR_AFTER_START, Time(16, 0), "replace"),
+        SmsStep(
+            "send_email12_00_la", SmsTemplate.LA_3_HOURS_BEFORE, Time(12, 0), "replace"
+        ),
+        SmsStep(
+            "send_email13_00_la", SmsTemplate.LA_2_HOURS_BEFORE, Time(13, 0), "replace"
+        ),
+        SmsStep(
+            "send_email14_00_la", SmsTemplate.LA_1_HOUR_BEFORE, Time(14, 0), "replace"
+        ),
+        SmsStep(
+            "send_email14_50_la",
+            SmsTemplate.LA_10_MINUTES_BEFORE,
+            Time(14, 50),
+            "replace",
+        ),
+        SmsStep(None, SmsTemplate.LA_START, Time(15, 0), "replace"),
+        SmsStep(None, SmsTemplate.LA_10_MINUTES_AFTER_START, Time(15, 10), "replace"),
+        SmsStep(None, SmsTemplate.LA_AFTER_WEBINAR, Time(16, 30), "replace"),
+        SmsStep(None, SmsTemplate.LA_AFTER_WEBINAR_2, Time(19, 0), "replace"),
         SmsStep(None, SmsTemplate.LA_1_DAY_AFTER_WEB, Time(24, 0), "increment"),
         SmsStep(None, SmsTemplate.LA_2_DAYS_AFTER_WEB, Time(48, 0), "increment"),
     ],
     tomorrow=[
         # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
         # SmsStep(None, SmsTemplate.AFTER_REG_1_HOUR, time(1, 0), "increment"),
-        SmsStep(None, SmsTemplate.LA_MORNING_REMINDER, Time(10, 0), "replace"),
+        SmsStep(
+            None, SmsTemplate.LA_1_HOUR_AFTER_REG_TOMORROW, Time(1, 0), "increment"
+        ),
+        SmsStep(None, SmsTemplate.LA_3_HOURS_BEFORE, Time(12, 0), "replace"),
         SmsStep(None, SmsTemplate.LA_2_HOURS_BEFORE, Time(13, 0), "replace"),
         SmsStep(None, SmsTemplate.LA_1_HOUR_BEFORE, Time(14, 0), "replace"),
         SmsStep(None, SmsTemplate.LA_START, Time(15, 0), "replace"),
-        SmsStep(None, SmsTemplate.LA_15_MINUTES_AFTER_START, Time(15, 15), "replace"),
-        SmsStep(None, SmsTemplate.LA_1_HOUR_AFTER_START, Time(16, 0), "replace"),
+        SmsStep(None, SmsTemplate.LA_10_MINUTES_AFTER_START, Time(15, 10), "replace"),
+        SmsStep(None, SmsTemplate.LA_AFTER_WEBINAR, Time(16, 30), "replace"),
+        SmsStep(None, SmsTemplate.LA_AFTER_WEBINAR_2, Time(19, 0), "replace"),
         SmsStep(None, SmsTemplate.LA_1_DAY_AFTER_WEB, Time(48, 0), "increment"),
         SmsStep(None, SmsTemplate.LA_2_DAYS_AFTER_WEB, Time(72, 0), "increment"),
     ],
 )
 
+# //au is temporarily deprecated
 WORKFLOW_AU = WorkflowDefinition(
     today=[
         # SmsStep(None, SmsTemplate.AFTER_REG_5_MINUTES, time(0, 5), "increment"),
